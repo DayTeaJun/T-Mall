@@ -6,7 +6,7 @@ import { Loader2, MessageSquare, Star, Calendar, Package } from "lucide-react";
 import Image from "next/image";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import ReactPaginate from "react-paginate";
-import { useDelReview, useGetReviews } from "@/lib/queries/auth";
+import { useDelReview, useGetReviews } from "@/lib/queries/reviews";
 
 export interface Review {
   id: string;

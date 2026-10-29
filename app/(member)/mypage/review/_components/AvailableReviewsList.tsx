@@ -6,7 +6,7 @@ import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import {
   useGetAvailableReviews,
   usePostHiddenReview,
-} from "@/lib/queries/auth"; // 파일 경로에 맞게 수정
+} from "@/lib/queries/reviews";
 import { useAuthStore } from "@/lib/store/useAuthStore";
 import { Loader2, Package } from "lucide-react";
 import ReactPaginate from "react-paginate";
