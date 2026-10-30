@@ -14,7 +14,7 @@ import { useAuthStore } from "@/lib/store/useAuthStore";
 import { toast } from "sonner";
 import AdminChatRoom from "./AdminChatRoom";
 import { RealtimeChannel } from "@supabase/supabase-js";
-import { useInfiniteAdminChatList } from "@/lib/queries/auth";
+import { useInfiniteAdminChatList } from "@/lib/queries/chat";
 import { queryClient } from "@/components/providers/ReactQueryProvider";
 
 export interface AdminChatListProps {

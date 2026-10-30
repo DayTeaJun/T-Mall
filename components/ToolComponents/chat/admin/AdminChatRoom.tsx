@@ -5,7 +5,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { createBrowserSupabaseClient } from "@/lib/config/supabase/client";
 import { useAuthStore } from "@/lib/store/useAuthStore";
 import { toast } from "sonner";
-import { CHAT_MESSAGES_PAGE_SIZE, useAdminChatMsg } from "@/lib/queries/auth";
+import { CHAT_MESSAGES_PAGE_SIZE, useAdminChatMsg } from "@/lib/queries/chat";
 import { queryClient } from "@/components/providers/ReactQueryProvider";
 
 interface Message {
