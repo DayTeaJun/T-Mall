@@ -13,7 +13,7 @@ import {
   KeyRound,
   HelpCircle,
 } from "lucide-react";
-import { usePostInquiryMutation } from "@/lib/queries/auth";
+import { usePostInquiryMutation } from "@/lib/queries/inquiry";
 import { uploadImageToStorage } from "@/lib/queries/storage";
 import { useDetailImagePreview } from "@/hooks/useImagePreview";
 import { toast } from "sonner";

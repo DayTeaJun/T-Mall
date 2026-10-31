@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Lock } from "lucide-react";
 import { toast } from "sonner";
 import { useInquiryStore } from "@/lib/store/useInquiryStore";
-import { unlockInquirySecret } from "@/lib/queries/auth";
+import { unlockInquirySecret } from "@/lib/queries/inquiry";
 
 interface InquiryType {
   id: number;

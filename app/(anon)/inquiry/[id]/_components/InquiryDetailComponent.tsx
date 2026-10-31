@@ -10,7 +10,7 @@ import {
   unlockInquirySecret,
   useDeleteInquiry,
   useGetInquiryDetail,
-} from "@/lib/queries/auth";
+} from "@/lib/queries/inquiry";
 import Image from "next/image";
 import { LockKeyhole } from "lucide-react";
 

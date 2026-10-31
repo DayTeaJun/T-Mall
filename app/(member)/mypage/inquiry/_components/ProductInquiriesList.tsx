@@ -15,7 +15,7 @@ import ReactPaginate from "react-paginate";
 import {
   useDelProductInquiry,
   useGetProductInquiries,
-} from "@/lib/queries/auth";
+} from "@/lib/queries/inquiry";
 
 export interface ProductInquiry {
   id: number; //

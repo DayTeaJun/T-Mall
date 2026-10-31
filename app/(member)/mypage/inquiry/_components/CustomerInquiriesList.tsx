@@ -5,7 +5,10 @@ import { useAuthStore } from "@/lib/store/useAuthStore";
 import { Loader2, MailQuestion, Calendar, CornerDownRight } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import ReactPaginate from "react-paginate";
-import { useDeleteInquiry, useGetCustomerInquiries } from "@/lib/queries/auth";
+import {
+  useDeleteInquiry,
+  useGetCustomerInquiries,
+} from "@/lib/queries/inquiry";
 
 const INQUIRY_TYPE_MAP: Record<string, string> = {
   DELIVERY: "배송",

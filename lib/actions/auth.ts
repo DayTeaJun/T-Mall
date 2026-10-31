@@ -395,36 +395,6 @@ export const withdrawalUser = async () => {
   return { success: true };
 };
 
-export async function getCustomerInquiries(
-  userId: string,
-  page: number,
-  limit: number,
-) {
-  const supabase = await createServerSupabaseClient();
-
-  const from = (page - 1) * limit;
-  const to = from + limit - 1;
-
-  const { data, count, error } = await supabase
-    .from("inquiries")
-    .select("*", { count: "exact" })
-    .eq("user_id", userId)
-    .range(from, to)
-    .order("created_at", { ascending: false });
-
-  if (error) throw new Error(error.message);
-
-  const formattedInquiries = (data || []).map((inquiry) => ({
-    ...inquiry,
-    category: inquiry.inquiry_type || "일반문의",
-  }));
-
-  return {
-    inquiries: formattedInquiries,
-    count: count || 0,
-  };
-}
-
 // 문의 삭제
 export async function deleteInquiry(
   inquiryId: number,

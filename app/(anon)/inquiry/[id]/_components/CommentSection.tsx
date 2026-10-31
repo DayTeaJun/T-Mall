@@ -8,7 +8,7 @@ import {
   usePostInquiryCommentMutation,
   useUpdateInquiryCommentMutation,
   useDeleteInquiryCommentMutation,
-} from "@/lib/queries/auth";
+} from "@/lib/queries/inquiry";
 
 interface CommentSectionProps {
   inquiry: {
