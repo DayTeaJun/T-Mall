@@ -2,7 +2,7 @@
 
 import Modal from "@/components/common/modal/Modal";
 import { Json } from "@/lib/config/supabase/types_db";
-import { useGetMyAvailableCoupons } from "@/lib/queries/auth";
+import { useGetMyAvailableCoupons } from "@/lib/queries/coupon";
 import {
   useDeleteCartItemMutation,
   useProductAllCart,

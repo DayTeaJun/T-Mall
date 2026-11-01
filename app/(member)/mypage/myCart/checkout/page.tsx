@@ -10,7 +10,8 @@ import { LoaderCircle } from "lucide-react";
 import Image from "next/image";
 import { toast } from "sonner";
 import AddressListModal from "@/components/common/modal/delivery/AddressModal";
-import { useGetDefaultAddress, useGetMyCoupon } from "@/lib/queries/auth";
+import { useGetDefaultAddress } from "@/lib/queries/auth";
+import { useGetMyCoupon } from "@/lib/queries/coupon";
 
 const clientKey = process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY!;
 

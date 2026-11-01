@@ -10,10 +10,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { toast } from "sonner";
 import { useGetProductDetail } from "@/lib/queries/products";
-import {
-  useGetDefaultAddress,
-  useGetMyAvailableCoupons,
-} from "@/lib/queries/auth";
+import { useGetDefaultAddress } from "@/lib/queries/auth";
+import { useGetMyAvailableCoupons } from "@/lib/queries/coupon";
 import AddressListModal from "@/components/common/modal/delivery/AddressModal";
 
 const clientKey = process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY!;

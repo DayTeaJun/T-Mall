@@ -1,6 +1,6 @@
 "use client";
 
-import { useGetMyAvailableCoupons } from "@/lib/queries/auth";
+import { useGetMyAvailableCoupons } from "@/lib/queries/coupon";
 import { useAuthStore } from "@/lib/store/useAuthStore";
 import { calculateDday, formatWithoutYear } from "@/lib/utils";
 import { useState } from "react";

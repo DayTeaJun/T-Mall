@@ -6,7 +6,7 @@ import { Sparkles, Ticket, Check } from "lucide-react";
 import { createBrowserSupabaseClient } from "@/lib/config/supabase/client";
 import { toast } from "sonner";
 import { useAuthStore } from "@/lib/store/useAuthStore";
-import { useGetIsCouponDownloaded } from "@/lib/queries/auth";
+import { useGetIsCouponDownloaded } from "@/lib/queries/coupon";
 import { queryClient } from "@/components/providers/ReactQueryProvider";
 
 export default function EventPage() {

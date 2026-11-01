@@ -3,7 +3,7 @@
 import { Plus, X } from "lucide-react";
 import React, { useState } from "react";
 import { toast } from "sonner";
-import { usePostDownloadCouponMutation } from "@/lib/queries/auth";
+import { usePostDownloadCouponMutation } from "@/lib/queries/coupon";
 import { useAuthStore } from "@/lib/store/useAuthStore";
 
 export default function CouponDownload() {
