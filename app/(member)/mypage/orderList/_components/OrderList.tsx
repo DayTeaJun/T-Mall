@@ -3,7 +3,10 @@
 import ReactPaginate from "react-paginate";
 import CartBtn from "@/components/common/buttons/CartBtn";
 import Modal from "@/components/common/modal/Modal";
-import { useGetOrders, useUpdateCancelOrderItem } from "@/lib/queries/auth";
+import {
+  useGetOrders,
+  useUpdateCancelOrderItem,
+} from "@/lib/queries/orders";
 import { useAuthStore } from "@/lib/store/useAuthStore";
 import {
   LoaderCircle,

@@ -2,7 +2,7 @@
 
 import { queryClient } from "@/components/providers/ReactQueryProvider";
 import { updateDeliveryStatus } from "@/lib/actions/admin";
-import { useGetOrders } from "@/lib/queries/auth";
+import { useGetOrders } from "@/lib/queries/orders";
 import { useAuthStore } from "@/lib/store/useAuthStore";
 import { LoaderCircle, PackageX, RefreshCcw, Search, X } from "lucide-react";
 import Image from "next/image";

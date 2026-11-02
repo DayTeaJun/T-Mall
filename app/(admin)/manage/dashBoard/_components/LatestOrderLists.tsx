@@ -1,6 +1,6 @@
 "use client";
 
-import { useGetOrders } from "@/lib/queries/auth";
+import { useGetOrders } from "@/lib/queries/orders";
 import { useAuthStore } from "@/lib/store/useAuthStore";
 import { ArrowRight, Loader2, Package, PackageX } from "lucide-react";
 import Image from "next/image";

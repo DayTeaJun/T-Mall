@@ -17,7 +17,7 @@ import {
   useDeleteOrderMutation,
   useGetOrderDetails,
   useUpdateCancelOrderItem,
-} from "@/lib/queries/auth";
+} from "@/lib/queries/orders";
 import { OrderItemType } from "@/types/product";
 import { useState } from "react";
 import Modal from "@/components/common/modal/Modal";

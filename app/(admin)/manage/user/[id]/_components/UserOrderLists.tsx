@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { Package, Loader2, ChevronRight } from "lucide-react";
 import ReactPaginate from "react-paginate";
-import { useGetOrders } from "@/lib/queries/auth";
+import { useGetOrders } from "@/lib/queries/orders";
 import { useRouter } from "next/navigation";
 
 interface Product {

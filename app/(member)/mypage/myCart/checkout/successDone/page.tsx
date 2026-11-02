@@ -10,7 +10,7 @@ import {
   PackageX,
   Ticket,
 } from "lucide-react";
-import { useGetOrderDetails } from "@/lib/queries/auth";
+import { useGetOrderDetails } from "@/lib/queries/orders";
 import { toast } from "sonner";
 import { OrderItemType } from "@/types/product";
 

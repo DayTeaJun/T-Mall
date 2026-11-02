@@ -12,7 +12,10 @@ import {
   Ticket,
 } from "lucide-react";
 import { Dropdown } from "@/components/common/Dropdown";
-import { useDeleteOrderMutation, useGetOrderDetails } from "@/lib/queries/auth";
+import {
+  useDeleteOrderMutation,
+  useGetOrderDetails,
+} from "@/lib/queries/orders";
 import { OrderItemType } from "@/types/product";
 import { useState } from "react";
 import Modal from "@/components/common/modal/Modal";
