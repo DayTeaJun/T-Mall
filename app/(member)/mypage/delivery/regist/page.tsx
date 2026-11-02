@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/lib/store/useAuthStore";
-import { usePostDeliveryAddressMutation } from "@/lib/queries/auth";
+import { usePostDeliveryAddressMutation } from "@/lib/queries/delivery";
 import DaumPostcode, {
   DaumPostcodeData,
 } from "@/components/common/AddressSearch";

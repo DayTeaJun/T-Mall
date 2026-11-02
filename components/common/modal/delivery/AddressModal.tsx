@@ -3,7 +3,7 @@ import { Loader2, Truck, Plus } from "lucide-react";
 import {
   useGetAddressList,
   usePostDefaultDeliveryAddressMutation,
-} from "@/lib/queries/auth";
+} from "@/lib/queries/delivery";
 import EditDeliveryForm from "./EditDeliveryForm";
 import RegistDeliveryForm from "./RegistDeliveryForm";
 

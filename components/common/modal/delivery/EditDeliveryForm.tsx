@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useAuthStore } from "@/lib/store/useAuthStore";
-import { usePatchDeliveryAddressMutation } from "@/lib/queries/auth";
+import { usePatchDeliveryAddressMutation } from "@/lib/queries/delivery";
 import DaumPostcode, {
   DaumPostcodeData,
 } from "@/components/common/AddressSearch";

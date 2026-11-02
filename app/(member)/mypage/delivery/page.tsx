@@ -4,7 +4,7 @@ import {
   useDelDeliveryAddressMutation,
   useGetAddressList,
   usePostDefaultDeliveryAddressMutation,
-} from "@/lib/queries/auth";
+} from "@/lib/queries/delivery";
 import { useAuthStore } from "@/lib/store/useAuthStore";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
