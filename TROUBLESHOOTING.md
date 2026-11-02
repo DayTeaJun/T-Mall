@@ -2,13 +2,14 @@
 
 ### 페이지 하나 로드에 중복되던 세션 조회
 
-로그인 상태에서 페이지 하나를 로드할 때, 미들웨어와 레이아웃(루트/마이페이지)이 각자 독립적으로 `auth.getUser()` + `user_table` 조회를 반복해서 **Supabase 왕복이 5회(미들웨어 2회 + 레이아웃 3회)** 발생하고 있었습니다.
+로그인 상태에서 페이지 하나(루트+마이페이지 레이아웃)를 로드할 때, 미들웨어와 레이아웃이 각자 독립적으로 세션을 확인해서 **Supabase 왕복이 5회** 발생하고 있었습니다.
 
-- `app/layout.tsx`와 `mypage/layout.tsx`가 같은 요청 안에서 각자 세션을 조회하던 것은 React `cache()`로 감싸서 같은 렌더링 트리 안에서는 1회만 실행되고 재사용되도록 수정했습니다.
-- 상품 상세 페이지도 `page.tsx`/`CommentsSection.tsx`/`ProductInquiry.tsx`가 각자 `getSession()`을 호출하고 있어서, 세션 확인만 공유하는 `getCachedUserId()`를 만들어 통합했습니다.
-- 마지막으로 미들웨어가 이미 확인한 세션 정보를 요청 헤더(`x-user-session`)에 실어 레이아웃으로 그대로 넘기는 방식으로 바꿔, 레이아웃이 다시 조회할 필요 자체를 없앴습니다.
+- **미들웨어 쪽 2회**: `auth.getUser()` + `user_table` select. 라우트 가드를 위해 꼭 필요한 조회.
+- **레이아웃 쪽 3회**: 당시의 `getServerSession()`이 내부에서 `auth.getUser()` → `user_table`의 `last_login_at` update → `user_table` select까지 세 번을 했음. 이건 `app/layout.tsx`와 `mypage/layout.tsx`가 같은 요청 안에서 각자 또 호출하던 걸 React `cache()`로 감싸서 "레이아웃이 몇 개든 1세트(3회)만 실행"되도록 먼저 막아둔 상태였음 — `cache()` 자체가 왕복 횟수를 줄인 건 아니고, 더 늘어나지 않게 상한선을 고정해준 선행 조치였음.
 
-이 세 단계를 거쳐 로그인 상태로 페이지 하나를 로드할 때 Supabase 왕복이 **5회 → 2회**로 줄어든 것을 실측으로 확인했습니다.
+진짜로 5회 → 2회를 만든 건, 미들웨어가 이미 확인해둔 세션 정보를 요청 헤더(`x-user-session`)에 실어 레이아웃으로 그대로 넘기는 방식으로 바꿔서, 레이아웃 쪽의 저 3회(및 그 안에 끼어있던 `last_login_at` update — 이건 로그인 시점에 한 번만 하도록 `signInUser`로 옮김)를 통째로 없앤 것입니다. 레이아웃은 이제 조회 없이 헤더만 읽습니다. 이 수정 이후 로그인 상태로 페이지 하나를 로드할 때 Supabase 왕복이 **5회 → 2회(미들웨어만)**로 줄어든 것을 실측으로 확인했습니다.
+
+(별개로, 상품 상세 페이지는 `page.tsx`/`CommentsSection.tsx`/`ProductInquiry.tsx`가 각자 `getSession()`을 부르고 있어서 `getCachedUserId()`로 통합했습니다 — 이건 같은 날 작업했지만 위 5→2 측정과는 다른 페이지의 별개 최적화입니다.)
 
 <br>
 
