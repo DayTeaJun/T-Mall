@@ -18,7 +18,6 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
-import { createBrowserSupabaseClient } from "../config/supabase/client";
 import { useAuthStore } from "../store/useAuthStore";
 
 // 로그인
