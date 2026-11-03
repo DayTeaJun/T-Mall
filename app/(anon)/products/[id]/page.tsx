@@ -1,7 +1,5 @@
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
-import { createServerSupabaseClient } from "@/lib/config/supabase/server/server";
-import { getCachedUserId } from "@/lib/config/supabase/server/getCachedUserId";
 import ProductImageSection from "./_components/section/ProductImageSection";
 import ShareButton from "@/components/common/buttons/ShareBtn";
 import ProductPurchaseSection from "./_components/section/ProductPurchaseSection";
@@ -84,10 +82,12 @@ export default async function ProductDetailPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const supabase = await createServerSupabaseClient();
   const id = (await params).id;
 
-  const { data: product, error } = await supabase
+  // 정적 생성(generateStaticParams) 시점엔 요청 쿠키가 없어서 로그인 여부를
+  // 서버에서 판단할 수 없음 — 여기서는 공개 데이터만 내려주고, 즐겨찾기/내
+  // 리뷰/내 문의처럼 유저별로 달라지는 값은 각 클라이언트 컴포넌트가 직접 불러온다.
+  const { data: product, error } = await publicSupabase
     .from("products")
     .select("*")
     .eq("id", id)
@@ -95,22 +95,7 @@ export default async function ProductDetailPage({
     .single();
   if (!product || error) return notFound();
 
-  const userId = await getCachedUserId();
-
-  let initialFavorited = false;
-
-  if (userId) {
-    const { data: isFavorited, error: favError } = await supabase
-      .from("favorites")
-      .select("product_id")
-      .eq("user_id", userId)
-      .eq("product_id", id)
-      .maybeSingle();
-
-    if (!favError && isFavorited) initialFavorited = true;
-  }
-
-  const { data: detailImages } = await supabase
+  const { data: detailImages } = await publicSupabase
     .from("product_images")
     .select("image_url, sort_order")
     .eq("product_id", product.id)
@@ -118,8 +103,11 @@ export default async function ProductDetailPage({
 
   // 리뷰 섹션 1페이지분만 서버에서 미리 받아 ReviewsSection에 넘김 —
   // 클라이언트에서 처음부터 다시 불러오는 깜빡임 없이 바로 보이도록.
-  // 내 리뷰는 ReviewsSection의 "내가 남긴 리뷰" 섹션에서 별도로 보여주므로 제외
-  let initialReviewsQuery = supabase
+  const {
+    data: initialReviews,
+    count: initialReviewCount,
+    error: initialReviewsError,
+  } = await publicSupabase
     .from("reviews")
     .select(
       `
@@ -142,57 +130,16 @@ export default async function ProductDetailPage({
     .order("created_at", { ascending: false })
     .range(0, REVIEW_PAGE_SIZE - 1);
 
-  if (userId) {
-    initialReviewsQuery = initialReviewsQuery.neq("user_id", userId);
-  }
-
-  const {
-    data: initialReviews,
-    count: initialReviewCount,
-    error: initialReviewsError,
-  } = await initialReviewsQuery;
-
   if (initialReviewsError) {
     console.error("리뷰 초기 데이터 조회 오류:", initialReviewsError);
   }
 
-  // "내가 남긴 리뷰" 고정 섹션용 — 로그인 상태에서만, 서버에서 미리 가져와
-  // 클라이언트 auth 스토어가 채워지기 전까지 잠깐 안 보이는 깜빡임을 없앰
-  let initialMyReview = null;
-
-  if (userId) {
-    const { data: myReview, error: myReviewError } = await supabase
-      .from("reviews")
-      .select(
-        `
-        id,
-        user_id,
-        user_name,
-        rating,
-        created_at,
-        images,
-        content,
-        product_id,
-        updated_at,
-        public_profiles ( profile_image_url ),
-        helpful_count,
-        review_helpfuls ( user_id )
-      `,
-      )
-      .eq("product_id", id)
-      .eq("user_id", userId)
-      .maybeSingle();
-
-    if (myReviewError) {
-      console.error("내 리뷰 초기 데이터 조회 오류:", myReviewError);
-    } else {
-      initialMyReview = myReview;
-    }
-  }
-
-  // 상품 문의 섹션 1페이지분만 서버에서 미리 받아 ProductInquiry에 넘김 —
-  // 내 문의는 ProductInquiry의 "내 문의" 섹션에서 별도로 보여주므로 제외
-  let initialInquiriesQuery = supabase
+  // 상품 문의 섹션 1페이지분만 서버에서 미리 받아 ProductInquiry에 넘김
+  const {
+    data: initialInquiries,
+    count: initialInquiryCount,
+    error: initialInquiriesError,
+  } = await publicSupabase
     .from("product_inquiry")
     .select(
       `
@@ -211,49 +158,8 @@ export default async function ProductDetailPage({
     .order("created_at", { ascending: false })
     .range(0, INQUIRY_PAGE_SIZE - 1);
 
-  if (userId) {
-    initialInquiriesQuery = initialInquiriesQuery.neq("user_id", userId);
-  }
-
-  const {
-    data: initialInquiries,
-    count: initialInquiryCount,
-    error: initialInquiriesError,
-  } = await initialInquiriesQuery;
-
   if (initialInquiriesError) {
     console.error("문의 초기 데이터 조회 오류:", initialInquiriesError);
-  }
-
-  // "내 문의" 고정 섹션용 — 로그인 상태에서만, 서버에서 미리 가져와
-  // 클라이언트 auth 스토어가 채워지기 전까지 잠깐 안 보이는 깜빡임을 없앰
-  let initialMyInquiry = null;
-
-  if (userId) {
-    const { data: myInquiry, error: myInquiryError } = await supabase
-      .from("product_inquiry")
-      .select(
-        `
-        id,
-        user_id,
-        user_name,
-        created_at,
-        content,
-        answer_content,
-        answered_at,
-        admin_id
-      `,
-      )
-      .eq("product_id", id)
-      .eq("user_id", userId)
-      .order("created_at", { ascending: false })
-      .limit(1);
-
-    if (myInquiryError) {
-      console.error("내 문의 초기 데이터 조회 오류:", myInquiryError);
-    } else {
-      initialMyInquiry = myInquiry?.[0] ?? null;
-    }
   }
 
   const hasDiscount =
@@ -300,10 +206,7 @@ export default async function ProductDetailPage({
                 )}
               </div>
               <div className="flex gap-1 items-center">
-                <BookmarkBtn
-                  productId={id}
-                  initialFavorited={initialFavorited}
-                />
+                <BookmarkBtn productId={id} />
                 <ShareButton />
               </div>
             </div>
@@ -462,14 +365,12 @@ export default async function ProductDetailPage({
         productId={id}
         initialReviews={initialReviews ?? []}
         initialTotalCount={initialReviewCount ?? 0}
-        initialMyReview={initialMyReview}
       />
 
       <ProductInquiry
         productId={id}
         initialInquiries={initialInquiries ?? []}
         initialTotalCount={initialInquiryCount ?? 0}
-        initialMyInquiry={initialMyInquiry}
       />
 
       <RecommendProductsCarousel

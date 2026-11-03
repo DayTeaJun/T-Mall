@@ -17,25 +17,20 @@ interface Props {
   productId: string;
   initialInquiries?: ProductInquiryRow[];
   initialTotalCount?: number;
-  initialMyInquiry?: ProductInquiryRow | null;
 }
 
 function ProductInquiry({
   productId,
   initialInquiries,
   initialTotalCount,
-  initialMyInquiry,
 }: Props) {
   const { user } = useAuthStore();
   const userId = user?.id;
   const [page, setPage] = useState(1);
 
-  // 서버에서 로그인 쿠키 기준으로 이미 확인해서 내려준 값이 있으면 그대로 써서
-  // 클라이언트 auth 스토어가 채워지기 전에도 "내 문의" 섹션이 바로 보이게 함
   const { myInquiry, isLoading: isMyInquiryLoading } = useMyProductInquiryQuery(
     productId,
     userId,
-    initialMyInquiry !== undefined ? initialMyInquiry : undefined,
   );
 
   const hasInitialData = initialTotalCount !== undefined;

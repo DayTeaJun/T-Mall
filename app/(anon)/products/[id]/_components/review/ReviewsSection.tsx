@@ -17,7 +17,6 @@ interface Props {
   productId: string;
   initialReviews?: ProductReviewRow[];
   initialTotalCount?: number;
-  initialMyReview?: ProductReviewRow | null;
 }
 
 function withIsLiked(comment: ProductReviewRow, userId?: string) {
@@ -34,18 +33,14 @@ export default function ReviewsSection({
   productId,
   initialReviews,
   initialTotalCount,
-  initialMyReview,
 }: Props) {
   const { user } = useAuthStore();
   const userId = user?.id;
   const [page, setPage] = useState(1);
 
-  // 서버에서 로그인 쿠키 기준으로 이미 확인해서 내려준 값이 있으면 그대로 써서
-  // 클라이언트 auth 스토어가 채워지기 전에도 "내 리뷰" 섹션이 바로 보이게 함
   const { myReview, isLoading: isMyReviewLoading } = useMyProductReviewQuery(
     productId,
     userId,
-    initialMyReview !== undefined ? initialMyReview : undefined,
   );
 
   // 서버 컴포넌트에서 1페이지를 미리 받아온 경우, 그 데이터를 그대로

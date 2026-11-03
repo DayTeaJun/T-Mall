@@ -13,14 +13,13 @@ import {
 
 type Props = {
   productId: string;
-  initialFavorited: boolean;
 };
 
-export default function BookmarkBtn({ productId, initialFavorited }: Props) {
+export default function BookmarkBtn({ productId }: Props) {
   const { user } = useAuthStore();
   const router = useRouter();
 
-  const [isFavorited, setIsFavorited] = useState<boolean>(initialFavorited);
+  const [isFavorited, setIsFavorited] = useState(false);
   const { mutate: addFavoriteMutate } = usePostFavoriteMutation(user?.id ?? "");
   const { mutate: delFavoriteMutate } = useDeleteFavoriteMutation(
     user?.id ?? "",
