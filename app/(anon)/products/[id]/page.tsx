@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
+import { unstable_cache } from "next/cache";
 import ProductImageSection from "./_components/section/ProductImageSection";
 import ShareButton from "@/components/common/buttons/ShareBtn";
 import ProductPurchaseSection from "./_components/section/ProductPurchaseSection";
@@ -19,18 +20,105 @@ import ReviewsSection from "./_components/review/ReviewsSection";
 const REVIEW_PAGE_SIZE = 5;
 const INQUIRY_PAGE_SIZE = 5;
 
+// 상품/상세이미지/리뷰·문의 1페이지 — 전부 로그인 여부와 무관한 공개 데이터라
+// unstable_cache로 60초간 재사용. 이 라우트 자체는 더 이상 정적 생성되지 않으므로
+// (generateStaticParams 없음) 매 요청마다 실행되지만, DB는 60초에 한 번만 탄다.
+const getCachedProductDetail = unstable_cache(
+  async (id: string) => {
+    const { data: product, error } = await publicSupabase
+      .from("products")
+      .select("*")
+      .eq("id", id)
+      .eq("deleted", false)
+      .single();
+
+    if (!product || error) return null;
+
+    const { data: detailImages } = await publicSupabase
+      .from("product_images")
+      .select("image_url, sort_order")
+      .eq("product_id", product.id)
+      .order("sort_order", { ascending: true });
+
+    const {
+      data: initialReviews,
+      count: initialReviewCount,
+      error: initialReviewsError,
+    } = await publicSupabase
+      .from("reviews")
+      .select(
+        `
+        id,
+        user_id,
+        user_name,
+        rating,
+        created_at,
+        images,
+        content,
+        product_id,
+        updated_at,
+        public_profiles ( profile_image_url ),
+        helpful_count,
+        review_helpfuls ( user_id )
+      `,
+        { count: "exact" },
+      )
+      .eq("product_id", id)
+      .order("created_at", { ascending: false })
+      .range(0, REVIEW_PAGE_SIZE - 1);
+
+    if (initialReviewsError) {
+      console.error("리뷰 초기 데이터 조회 오류:", initialReviewsError);
+    }
+
+    const {
+      data: initialInquiries,
+      count: initialInquiryCount,
+      error: initialInquiriesError,
+    } = await publicSupabase
+      .from("product_inquiry")
+      .select(
+        `
+        id,
+        user_id,
+        user_name,
+        created_at,
+        content,
+        answer_content,
+        answered_at,
+        admin_id
+      `,
+        { count: "exact" },
+      )
+      .eq("product_id", id)
+      .order("created_at", { ascending: false })
+      .range(0, INQUIRY_PAGE_SIZE - 1);
+
+    if (initialInquiriesError) {
+      console.error("문의 초기 데이터 조회 오류:", initialInquiriesError);
+    }
+
+    return {
+      product,
+      detailImages: detailImages ?? [],
+      initialReviews: initialReviews ?? [],
+      initialReviewCount: initialReviewCount ?? 0,
+      initialInquiries: initialInquiries ?? [],
+      initialInquiryCount: initialInquiryCount ?? 0,
+    };
+  },
+  ["product-detail"],
+  { revalidate: 60 },
+);
+
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ id: string }>;
 }): Promise<Metadata> {
   const id = (await params).id;
-  const { data: product } = await publicSupabase
-    .from("products")
-    .select("*")
-    .eq("id", id)
-    .eq("deleted", false)
-    .single();
+  const detail = await getCachedProductDetail(id);
+  const product = detail?.product;
 
   if (!product) {
     return {
@@ -64,19 +152,6 @@ export async function generateMetadata({
   };
 }
 
-export async function generateStaticParams() {
-  const { data: products } = await publicSupabase
-    .from("products")
-    .select("id")
-    .eq("deleted", false);
-
-  return (
-    products?.map((product) => ({
-      id: product.id,
-    })) ?? []
-  );
-}
-
 export default async function ProductDetailPage({
   params,
 }: {
@@ -84,83 +159,21 @@ export default async function ProductDetailPage({
 }) {
   const id = (await params).id;
 
-  // 정적 생성(generateStaticParams) 시점엔 요청 쿠키가 없어서 로그인 여부를
-  // 서버에서 판단할 수 없음 — 여기서는 공개 데이터만 내려주고, 즐겨찾기/내
-  // 리뷰/내 문의처럼 유저별로 달라지는 값은 각 클라이언트 컴포넌트가 직접 불러온다.
-  const { data: product, error } = await publicSupabase
-    .from("products")
-    .select("*")
-    .eq("id", id)
-    .eq("deleted", false)
-    .single();
-  if (!product || error) return notFound();
+  // 이 라우트는 더 이상 정적 생성되지 않는다(generateStaticParams 없음).
+  // 매 요청마다 실제 요청 쿠키 기준으로 렌더링되므로, 캐시된 HTML에 다른
+  // 방문자의 로그인 정보가 섞여 나가는 문제가 없다. 공개 데이터 조회
+  // 자체는 getCachedProductDetail 안에서 60초짜리 캐시로 처리한다.
+  const detail = await getCachedProductDetail(id);
+  if (!detail) return notFound();
 
-  const { data: detailImages } = await publicSupabase
-    .from("product_images")
-    .select("image_url, sort_order")
-    .eq("product_id", product.id)
-    .order("sort_order", { ascending: true });
-
-  // 리뷰 섹션 1페이지분만 서버에서 미리 받아 ReviewsSection에 넘김 —
-  // 클라이언트에서 처음부터 다시 불러오는 깜빡임 없이 바로 보이도록.
   const {
-    data: initialReviews,
-    count: initialReviewCount,
-    error: initialReviewsError,
-  } = await publicSupabase
-    .from("reviews")
-    .select(
-      `
-      id,
-      user_id,
-      user_name,
-      rating,
-      created_at,
-      images,
-      content,
-      product_id,
-      updated_at,
-      public_profiles ( profile_image_url ),
-      helpful_count,
-      review_helpfuls ( user_id )
-    `,
-      { count: "exact" },
-    )
-    .eq("product_id", id)
-    .order("created_at", { ascending: false })
-    .range(0, REVIEW_PAGE_SIZE - 1);
-
-  if (initialReviewsError) {
-    console.error("리뷰 초기 데이터 조회 오류:", initialReviewsError);
-  }
-
-  // 상품 문의 섹션 1페이지분만 서버에서 미리 받아 ProductInquiry에 넘김
-  const {
-    data: initialInquiries,
-    count: initialInquiryCount,
-    error: initialInquiriesError,
-  } = await publicSupabase
-    .from("product_inquiry")
-    .select(
-      `
-      id,
-      user_id,
-      user_name,
-      created_at,
-      content,
-      answer_content,
-      answered_at,
-      admin_id
-    `,
-      { count: "exact" },
-    )
-    .eq("product_id", id)
-    .order("created_at", { ascending: false })
-    .range(0, INQUIRY_PAGE_SIZE - 1);
-
-  if (initialInquiriesError) {
-    console.error("문의 초기 데이터 조회 오류:", initialInquiriesError);
-  }
+    product,
+    detailImages,
+    initialReviews,
+    initialReviewCount,
+    initialInquiries,
+    initialInquiryCount,
+  } = detail;
 
   const hasDiscount =
     product.original_price && product.original_price > product.price;
@@ -188,7 +201,7 @@ export default async function ProductDetailPage({
         <div className="col-span-1">
           <ProductImageSection
             mainImage={product.image_url ?? ""}
-            detailImages={detailImages ?? []}
+            detailImages={detailImages}
           />
         </div>
 
@@ -347,30 +360,29 @@ export default async function ProductDetailPage({
       <ProductTabs />
 
       <div id="product-detail-section" className="mt-10 scroll-mt-[146px]">
-        {detailImages &&
-          detailImages.map((image) => (
-            <div key={image.sort_order} className="mb-4 w-full">
-              <Image
-                width={1200}
-                height={1800}
-                src={image.image_url}
-                alt={`Product detail ${image.sort_order}`}
-                className="w-full h-auto"
-              />
-            </div>
-          ))}
+        {detailImages.map((image) => (
+          <div key={image.sort_order} className="mb-4 w-full">
+            <Image
+              width={1200}
+              height={1800}
+              src={image.image_url}
+              alt={`Product detail ${image.sort_order}`}
+              className="w-full h-auto"
+            />
+          </div>
+        ))}
       </div>
 
       <ReviewsSection
         productId={id}
-        initialReviews={initialReviews ?? []}
-        initialTotalCount={initialReviewCount ?? 0}
+        initialReviews={initialReviews}
+        initialTotalCount={initialReviewCount}
       />
 
       <ProductInquiry
         productId={id}
-        initialInquiries={initialInquiries ?? []}
-        initialTotalCount={initialInquiryCount ?? 0}
+        initialInquiries={initialInquiries}
+        initialTotalCount={initialInquiryCount}
       />
 
       <RecommendProductsCarousel
