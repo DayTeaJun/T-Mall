@@ -169,6 +169,8 @@ export function useUpdateMyProfileMutation(userId: string | undefined) {
         return;
       }
 
+      console.error("프로필 수정 실패:", error);
+
       if (error && typeof error === "object" && "status" in error) {
         const status = error.status;
         if (status === 400) {
@@ -176,10 +178,10 @@ export function useUpdateMyProfileMutation(userId: string | undefined) {
         } else if (status === 500) {
           toast.error("서버 에러가 발생했습니다.");
         } else {
-          toast.error(`오류 발생: ${errorMessage}`);
+          toast.error("프로필 수정에 실패했습니다. 잠시 후 다시 시도해 주세요.");
         }
       } else {
-        toast.error(errorMessage || "예상치 못한 오류가 발생했습니다.");
+        toast.error("프로필 수정에 실패했습니다. 잠시 후 다시 시도해 주세요.");
       }
     },
   });

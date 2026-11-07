@@ -66,11 +66,8 @@ export const useDeleteProductMutation = (productId: string) => {
       toast.success("상품 삭제가 완료되었습니다.");
     },
     onError: (error) => {
-      if (error instanceof Error) {
-        toast.error(error.message);
-      } else {
-        toast.error("알 수 없는 오류가 발생했습니다.");
-      }
+      console.error("상품 삭제 실패:", error);
+      toast.error("상품 삭제에 실패했습니다. 잠시 후 다시 시도해 주세요.");
     },
   });
 
@@ -101,11 +98,8 @@ export const useUpdateProductMutation = (productId: string) => {
     },
 
     onError: (error) => {
-      if (error instanceof Error) {
-        toast.error(error.message);
-      } else {
-        toast.error("알 수 없는 오류가 발생했습니다.");
-      }
+      console.error("상품 수정 실패:", error);
+      toast.error("상품 수정에 실패했습니다. 잠시 후 다시 시도해 주세요.");
     },
   });
 
@@ -192,11 +186,10 @@ export function usePatchUserActiveMutation(userId: string) {
     },
 
     onError: (error) => {
-      if (error instanceof Error) {
-        toast.error(error.message);
-      } else {
-        toast.error("알 수 없는 오류가 발생했습니다.");
-      }
+      console.error("유저 계정 상태 변경 실패:", error);
+      toast.error(
+        "유저 계정 상태 변경에 실패했습니다. 잠시 후 다시 시도해 주세요.",
+      );
     },
   });
 

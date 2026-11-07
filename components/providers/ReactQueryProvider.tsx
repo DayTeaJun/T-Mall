@@ -5,6 +5,7 @@ import {
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -20,7 +21,7 @@ export const queryClient = new QueryClient({
   queryCache: new QueryCache({
     onError: (_, query) => {
       if (query.meta && query.meta.errorMessage) {
-        console.log(query.meta.errorMessage as string);
+        toast.error(query.meta.errorMessage as string);
       }
     },
   }),
