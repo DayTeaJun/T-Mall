@@ -13,14 +13,12 @@ import {
 } from "../actions/admin";
 import { queryClient } from "@/components/providers/ReactQueryProvider";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { toast } from "sonner";
 import { CreateProductType, ProductUpdateType } from "@/types/product";
 
 // 상품 등록 mutation
 export const useCreateProductMutation = () => {
   const router = useRouter();
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const { data, isError, mutate, isSuccess, isPending } = useMutation({
     mutationFn: async (productForm: CreateProductType) =>
@@ -37,15 +35,12 @@ export const useCreateProductMutation = () => {
       router.push("/manage/productList");
     },
     onError: (error) => {
-      if (error instanceof Error) {
-        setErrorMessage(error.message);
-      } else {
-        setErrorMessage("알 수 없는 오류가 발생했습니다.");
-      }
+      console.error("상품 등록 실패:", error);
+      toast.error("상품 등록에 실패했습니다. 잠시 후 다시 시도해 주세요.");
     },
   });
 
-  return { data, isError, mutate, isSuccess, isPending, errorMessage };
+  return { data, isError, mutate, isSuccess, isPending };
 };
 
 // 상품 삭제
