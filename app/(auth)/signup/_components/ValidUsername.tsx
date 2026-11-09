@@ -35,8 +35,7 @@ function ValidUsername({ username, setUsername, setUsernameValid }: Props) {
 
         if (!res.ok) {
           const text = await res.text();
-          console.log("check-username status:", res.status);
-          console.log("check-username response:", text);
+          console.error("닉네임 확인 실패:", res.status, text);
           setUsernameValid(
             "닉네임 확인 중 서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.",
           );
