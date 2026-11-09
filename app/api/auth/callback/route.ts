@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createServerSupabaseClient } from "@/lib/config/supabase/server/server";
+import { createActionSupabaseClient } from "@/lib/config/supabase/server/server";
 
 export async function GET(req: Request) {
   const url = new URL(req.url);
@@ -23,7 +23,7 @@ export async function GET(req: Request) {
     );
   }
 
-  const supabase = await createServerSupabaseClient();
+  const supabase = await createActionSupabaseClient();
 
   if (code) {
     try {

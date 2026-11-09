@@ -1,6 +1,6 @@
 "use server";
 
-import { createServerSupabaseClient } from "../config/supabase/server/server";
+import { createActionSupabaseClient } from "../config/supabase/server/server";
 
 interface ConfirmOrderItemInput {
   productId: string;
@@ -27,7 +27,7 @@ interface ConfirmOrderInput {
 export async function confirmOrder(
   input: ConfirmOrderInput,
 ): Promise<{ orderId: string }> {
-  const supabase = await createServerSupabaseClient();
+  const supabase = await createActionSupabaseClient();
 
   // 1. 요청을 보낸 사람이 실제로 누구인지 서버가 직접 확인
   const {
@@ -290,7 +290,7 @@ export async function confirmOrder(
 export async function cancelOrderItem(
   orderItemId: string,
 ): Promise<{ orderId: string }> {
-  const supabase = await createServerSupabaseClient();
+  const supabase = await createActionSupabaseClient();
 
   const {
     data: { user },

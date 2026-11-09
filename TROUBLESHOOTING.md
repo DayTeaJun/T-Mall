@@ -74,3 +74,11 @@
 그런데 "누군가 악의적으로 그 값을 읽을 수도 있지 않냐"는 질문을 받고 다시 짚어보니, 그 수정은 **하이드레이션 이후 화면에 뭘 그릴지**만 고친 것이었습니다. Next.js App Router는 서버 컴포넌트가 클라이언트 컴포넌트에 넘기는 props를 하이드레이션용으로 HTML 응답 자체에 직렬화해 넣기 때문에, 캐시된 페이지의 raw HTML(= `view-source`나 `curl` 응답)에는 여전히 이전 방문자의 `user` 값이 그대로 남아 있었습니다. 로그인된 피해자에게 아직 캐시 안 된 상품 링크를 보내 클릭시키고 그 직후 같은 URL을 열어보면, 화면 수정과 무관하게 캐시에 구워진 피해자 정보를 볼 수 있는 시나리오가 그대로 남아있던 겁니다.
 
 근본 원인은 "화면 표시"가 아니라 "이 라우트가 세션 의존 레이아웃과 같은 트리로 통째로 정적 캐시된다"는 것이었으므로, `generateStaticParams`를 제거해 이 라우트를 다른 페이지들과 똑같이 매 요청마다 동적으로 렌더링하도록 바꿨습니다. 그러면 캐시 자체가 없어지니 레이아웃의 세션 계산도 항상 그 요청의 진짜 쿠키를 쓰게 됩니다. 대신 상품/상세이미지/리뷰·문의 1페이지 같은 공개 데이터만 `unstable_cache`(60초)로 묶어서, 렌더링은 매번 새로 하되 DB 조회는 캐시가 살아있는 동안 재사용하도록 분리했습니다.
+
+### 쿠키 쓰기 실패 로그를 지웠다가, 로그인 실패를 조용히 삼킬 뻔한 수정
+
+`createServerSupabaseClient`의 쿠키 `set`/`remove`에 `console.log("error", error)`가 있었는데, 바로 옆 주석에 "Server Component에서 호출됐다면 무시해도 된다"고 적혀 있어서 그냥 로그만 지웠습니다. Server Component 렌더링 중엔 Next.js가 쿠키를 읽기 전용으로 강제해서 `set`이 항상 실패하는 게 정상 동작이고, 미들웨어가 이미 세션을 갱신해주니 무시해도 맞는 판단이었습니다.
+
+그런데 "이 함수를 쓰는 다른 곳엔 이 콘솔 에러가 필요한 경우도 있지 않냐"는 질문을 받고 호출부를 다시 전부 확인해보니, `createServerSupabaseClient` **하나를 Server Component(`page.tsx`)뿐 아니라 로그인(`signInUser`) 같은 Server Action, OAuth 콜백 같은 Route Handler에서도 똑같이 쓰고 있었습니다.** Server Action/Route Handler는 응답이 아직 확정되기 전이라 쿠키 쓰기가 실제로 성공해야 하는 컨텍스트인데, 같은 `catch` 블록을 공유하다 보니 "항상 무해한 실패"와 "로그인 세션이 실제로 안 심기는 실패"를 구분하지 못하고 있었습니다. 로그를 통째로 지우면 후자도 조용히 삼켜져서, 로그인은 성공한 것처럼 보이는데 세션 쿠키는 안 심긴 상황을 디버깅할 방법이 없어질 뻔했습니다.
+
+그래서 함수를 두 개로 나눴습니다 — Server Component용(`createServerSupabaseClient`, set/remove가 아예 아무 것도 안 함)과 Server Action/Route Handler용(`createActionSupabaseClient`, 실패하면 `console.error`로 실제로 남김). `lib/actions/*.ts`와 `app/api/auth/callback/route.ts`의 호출부를 전부 후자로 옮겼습니다.

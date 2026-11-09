@@ -1,7 +1,7 @@
 "use server";
 
 import { CreateProductType, ProductUpdateType } from "@/types/product";
-import { createServerSupabaseClient } from "../config/supabase/server/server";
+import { createActionSupabaseClient } from "../config/supabase/server/server";
 import { extractFilePathFromUrl } from "../utils/supabaseStorageUtils";
 import { createClient } from "@supabase/supabase-js";
 
@@ -20,7 +20,7 @@ export async function createProduct({
   stock_by_size,
   total_stock,
 }: CreateProductType) {
-  const supabase = await createServerSupabaseClient();
+  const supabase = await createActionSupabaseClient();
 
   const {
     data: { user },
@@ -79,7 +79,7 @@ export async function deleteProduct({
   productId: string;
   imagePath: string;
 }) {
-  const supabase = await createServerSupabaseClient();
+  const supabase = await createActionSupabaseClient();
   const { error: imageDeleteError } = await supabase.storage
     .from("product-images")
     .remove([imagePath]);
@@ -121,7 +121,7 @@ export async function updateProduct({
   favorite_count,
 }: ProductUpdateType) {
   const bucket = process.env.NEXT_PUBLIC_STORAGE_BUCKET;
-  const supabase = await createServerSupabaseClient();
+  const supabase = await createActionSupabaseClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -270,7 +270,7 @@ export async function getMyProducts(
   page: number = 0,
   pageSize: number = 10,
 ) {
-  const supabase = await createServerSupabaseClient();
+  const supabase = await createActionSupabaseClient();
   const from = page * pageSize;
   const to = from + pageSize - 1;
 
@@ -311,7 +311,7 @@ export async function updateDeliveryStatus(
   orderItemId: string,
   status: string,
 ) {
-  const supabase = await createServerSupabaseClient();
+  const supabase = await createActionSupabaseClient();
 
   const { error } = await supabase
     .from("order_items")
@@ -334,7 +334,7 @@ export async function getAllUsers({
   page?: number;
   pageSize?: number;
 }) {
-  const supabase = await createServerSupabaseClient();
+  const supabase = await createActionSupabaseClient();
   const {
     data: { user: sessionUser },
   } = await supabase.auth.getUser();
@@ -388,7 +388,7 @@ export async function getAllUsers({
 
 // 유저 프로필 조회
 export async function getUserProfile(userId: string) {
-  const supabase = await createServerSupabaseClient();
+  const supabase = await createActionSupabaseClient();
   const {
     data: { user: sessionUser },
   } = await supabase.auth.getUser();
@@ -434,7 +434,7 @@ export async function patchUserActive(
   userId: string,
   newStatus: "active" | "suspended" | "withdrawn",
 ) {
-  const supabase = await createServerSupabaseClient();
+  const supabase = await createActionSupabaseClient();
   const {
     data: { user: sessionUser },
   } = await supabase.auth.getUser();
@@ -485,7 +485,7 @@ interface DashboardOrderRow {
 }
 
 export async function getDashboardStatus() {
-  const supabase = await createServerSupabaseClient();
+  const supabase = await createActionSupabaseClient();
   const {
     data: { user: sessionUser },
   } = await supabase.auth.getUser();
@@ -570,7 +570,7 @@ export async function getDashboardStatus() {
 
 // 최근 7건 매출 조회
 export async function getWeeklySalesAction() {
-  const supabase = await createServerSupabaseClient();
+  const supabase = await createActionSupabaseClient();
 
   const {
     data: { user: sessionUser },
@@ -661,7 +661,7 @@ interface CategoryStat {
 }
 
 export async function getCategorySalesAction(): Promise<CategoryStat[]> {
-  const supabase = await createServerSupabaseClient();
+  const supabase = await createActionSupabaseClient();
 
   const {
     data: { user: sessionUser },

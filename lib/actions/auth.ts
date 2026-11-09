@@ -2,7 +2,7 @@
 
 import {
   createServerSupabaseAdminClient,
-  createServerSupabaseClient,
+  createActionSupabaseClient,
 } from "@/lib/config/supabase/server/server";
 import { SignUpFormData, UserProfileType } from "@/types/user";
 import { extractFilePathFromUrl } from "../utils/supabaseStorageUtils";
@@ -11,7 +11,7 @@ import { DeliveryAddressForm } from "@/app/(member)/mypage/delivery/regist/page"
 
 // 회원가입
 export async function signUpUser(formData: SignUpFormData) {
-  const supabase = await createServerSupabaseClient();
+  const supabase = await createActionSupabaseClient();
 
   const { email, password, username, phone } = formData;
 
@@ -49,7 +49,7 @@ export async function signUpUser(formData: SignUpFormData) {
 
 // 소셜 로그인 (회원가입)
 export async function signUpOAuth(formData: SignUpFormData) {
-  const supabase = await createServerSupabaseClient();
+  const supabase = await createActionSupabaseClient();
   type UserInsert = Database["public"]["Tables"]["user_table"]["Insert"];
 
   if (!formData.id) {
@@ -80,7 +80,7 @@ export async function signInUser(formData: {
   email: string;
   password: string;
 }) {
-  const supabase = await createServerSupabaseClient();
+  const supabase = await createActionSupabaseClient();
 
   const { email, password } = formData;
 
@@ -144,7 +144,7 @@ export async function getMyProfile(userId: string) {
 
 // 내 배송지 조회
 export async function getMyAddressList(userId: string) {
-  const supabaseAdmin = await createServerSupabaseClient();
+  const supabaseAdmin = await createActionSupabaseClient();
 
   const { data, error } = await supabaseAdmin
     .from("delivery_addresses")
@@ -161,7 +161,7 @@ export async function getMyAddressList(userId: string) {
 }
 
 export async function getMyDefaultAddress(userId: string) {
-  const supabaseAdmin = await createServerSupabaseClient();
+  const supabaseAdmin = await createActionSupabaseClient();
 
   const { data, error } = await supabaseAdmin
     .from("delivery_addresses")
@@ -184,7 +184,7 @@ export async function postDefaultDeliveryAddress(
   addressId: string,
   userId: string,
 ) {
-  const supabase = await createServerSupabaseClient();
+  const supabase = await createActionSupabaseClient();
 
   const {
     data: { user },
@@ -208,7 +208,7 @@ export async function postDefaultDeliveryAddress(
 
 // 내 배송지 등록
 export async function postDeliveryAddress(formData: DeliveryAddressForm) {
-  const supabase = await createServerSupabaseClient();
+  const supabase = await createActionSupabaseClient();
 
   const {
     data: { user },
@@ -247,7 +247,7 @@ export async function patchDeliveryAddress(
   addressId: string,
   formData: DeliveryAddressForm,
 ) {
-  const supabase = await createServerSupabaseClient();
+  const supabase = await createActionSupabaseClient();
 
   const {
     data: { user },
@@ -280,7 +280,7 @@ export async function patchDeliveryAddress(
 
 // 내 배송지 삭제
 export async function delDeliveryAddress(addressId: string) {
-  const supabase = await createServerSupabaseClient();
+  const supabase = await createActionSupabaseClient();
   const {
     data: { user },
     error: authError,
@@ -317,7 +317,7 @@ export async function updateMyProfile({
   profile_image_url,
 }: UserProfileType) {
   const bucket = process.env.NEXT_PUBLIC_STORAGE_USER_BUCKET;
-  const supabase = await createServerSupabaseClient();
+  const supabase = await createActionSupabaseClient();
 
   // 현재 저장된 프로필 이미지 URL 조회
   const { data: currentData, error } = await supabase
@@ -374,7 +374,7 @@ export async function updateMyProfile({
 
 // 회원 탈퇴
 export const withdrawalUser = async () => {
-  const supabase = await createServerSupabaseClient();
+  const supabase = await createActionSupabaseClient();
   const adminClient = await createServerSupabaseAdminClient();
 
   const {
@@ -401,7 +401,7 @@ export async function deleteInquiry(
   guestPassword?: string,
   isAdmin: boolean = false,
 ) {
-  const supabase = await createServerSupabaseClient();
+  const supabase = await createActionSupabaseClient();
 
   const removeImages = async (imageUrls: string[] | null) => {
     if (!imageUrls || imageUrls.length === 0) return;
