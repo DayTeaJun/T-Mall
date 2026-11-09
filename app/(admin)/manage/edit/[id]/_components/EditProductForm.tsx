@@ -203,13 +203,6 @@ export default function EditProductForm({
 
       const oldDetailImageIds = existingDetailImages.map((img) => img.id);
 
-      console.log("👉 최종 전송 데이터:", {
-        price: finalSalePrice,
-        original_price: originalPriceForDb,
-        discount_type: finalDiscountType,
-        discount_value: finalDiscountValue,
-      });
-
       mutate({
         id: product.id,
         name,

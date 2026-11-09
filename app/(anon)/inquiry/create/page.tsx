@@ -115,8 +115,6 @@ export default function DeliveryRegisterPage() {
     try {
       setUploading(true);
 
-      console.log("1. 업로드 직전 파일 배열:", detailFiles);
-
       const uploaderId = user?.id || "guest";
       const uploadedImageUrls = await Promise.all(
         detailFiles.map((file) =>

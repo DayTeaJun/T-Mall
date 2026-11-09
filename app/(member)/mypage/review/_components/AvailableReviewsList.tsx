@@ -49,7 +49,6 @@ export default function AvailableReviewsList() {
     }
 
     delOrderItemMutate(orderId);
-    console.log("숨김 처리된 주문 ID:", orderId);
     setIsModal({ isOpen: false, orderId: "" });
   };
 
