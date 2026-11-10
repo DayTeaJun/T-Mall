@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { useDetailImagePreview } from "@/hooks/useImagePreview";
-import DetailImagePreview from "@/app/(admin)/manage/regist/_components/DetailImagePreview";
+import DetailImagePreview from "@/components/common/DetailImagePreview";
 import { queryClient } from "@/components/providers/ReactQueryProvider";
 
 function ReviewEditForm({

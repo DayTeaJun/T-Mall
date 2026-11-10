@@ -9,7 +9,7 @@ import { useAuthStore } from "@/lib/store/useAuthStore";
 import { useRouter } from "next/navigation";
 import { Json } from "@/lib/config/supabase/types_db";
 import ImagePreviews from "../../../regist/_components/ImagePreview";
-import DetailImagePreview from "../../../regist/_components/DetailImagePreview";
+import DetailImagePreview from "@/components/common/DetailImagePreview";
 import {
   CATEGORY_MAP,
   GENDER_OPTIONS,

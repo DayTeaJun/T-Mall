@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { ImgPreview, useDetailImagePreview } from "@/hooks/useImagePreview";
 import ImagePreviews from "./ImagePreview";
 import { useAuthStore } from "@/lib/store/useAuthStore";
-import DetailImagePreview from "./DetailImagePreview";
+import DetailImagePreview from "@/components/common/DetailImagePreview";
 import {
   CATEGORY_MAP,
   GENDER_OPTIONS,
