@@ -45,8 +45,11 @@ export default function OnboardingForm({ user }: Props) {
   };
 
   const handleProfileImageChange = (file: File) => {
-    onUpload(file);
-    setProfileImage("");
+    const uploaded = onUpload(file);
+    if (uploaded) {
+      setProfileImage("");
+    }
+    return uploaded;
   };
 
   const [phone, setPhone] = useState("");

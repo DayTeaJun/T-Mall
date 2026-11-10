@@ -39,8 +39,11 @@ export default function EditProfilePage() {
   const { imageSrc, imgUrl, onUpload } = ImgPreview();
 
   const handleProfileImageChange = (file: File) => {
-    onUpload(file);
-    setProfileImage("");
+    const uploaded = onUpload(file);
+    if (uploaded) {
+      setProfileImage("");
+    }
+    return uploaded;
   };
 
   const handleSubmit = async () => {

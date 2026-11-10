@@ -103,8 +103,11 @@ export default function EditProductForm({
   } = ImgPreview();
 
   const handleMainImageUpload = (file: File) => {
-    rawUpload(file);
-    setMainImage("");
+    const uploaded = rawUpload(file);
+    if (uploaded) {
+      setMainImage("");
+    }
+    return uploaded;
   };
 
   const handleMainImageRemove = () => {

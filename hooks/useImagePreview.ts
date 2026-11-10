@@ -5,13 +5,13 @@ export function ImgPreview() {
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [imgUrl, setImgUrl] = useState<File | null>(null);
 
-  const onUpload = async (file: File): Promise<void> => {
+  const onUpload = (file: File): boolean => {
     const allowedExtensions = ["jpg", "jpeg", "png", "gif", "bmp", "jfif"];
     const fileExt = file?.name.split(".").pop()?.toLowerCase();
 
     if (!file || !fileExt || !allowedExtensions.includes(fileExt)) {
       toast.error("이미지만 등록할 수 있습니다!");
-      return;
+      return false;
     }
 
     setImgUrl(file);
@@ -27,6 +27,8 @@ export function ImgPreview() {
         setImageSrc(null);
       }
     };
+
+    return true;
   };
 
   const onRemove = () => {

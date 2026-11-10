@@ -9,7 +9,7 @@ interface Props {
   variant?: "square" | "circle";
   editImage?: string;
   imageSrc: string;
-  onUpload: (file: File) => void;
+  onUpload: (file: File) => boolean;
   onRemove?: () => void;
   className?: string;
 }
@@ -41,15 +41,17 @@ export default function ImagePreview({
       return;
     }
 
-    onUpload(file);
-    setIsEdited(true);
+    if (onUpload(file)) {
+      setIsEdited(true);
+    }
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    onUpload(file);
-    setIsEdited(true);
+    if (onUpload(file)) {
+      setIsEdited(true);
+    }
   };
 
   const hasImage = Boolean(imageSrc || (!isEdited && editImage));
