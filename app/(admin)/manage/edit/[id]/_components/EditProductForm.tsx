@@ -8,7 +8,7 @@ import { uploadImageToStorage } from "@/lib/queries/storage";
 import { useAuthStore } from "@/lib/store/useAuthStore";
 import { useRouter } from "next/navigation";
 import { Json } from "@/lib/config/supabase/types_db";
-import ImagePreviews from "../../../regist/_components/ImagePreview";
+import ImagePreviews from "@/components/common/ImagePreview";
 import DetailImagePreview from "@/components/common/DetailImagePreview";
 import {
   CATEGORY_MAP,

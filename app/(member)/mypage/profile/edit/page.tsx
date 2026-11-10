@@ -7,7 +7,7 @@ import {
 } from "@/lib/queries/auth";
 import { uploadImageToStorage } from "@/lib/queries/storage";
 import { useAuthStore } from "@/lib/store/useAuthStore";
-import ImagePreviews from "./_components/ImagePreview_Profile";
+import ImagePreviews from "@/components/common/ImagePreview";
 import { ImgPreview } from "@/hooks/useImagePreview";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -81,6 +81,7 @@ export default function EditProfilePage() {
         <section className="col-span-1 flex flex-col gap-4 sm:gap-6 p-4">
           <div className="border border-gray-200 bg-white p-6 flex flex-col items-center text-center">
             <ImagePreviews
+              variant="circle"
               imageSrc={imageSrc || ""}
               onUpload={handleProfileImageChange}
               editImage={data?.profile_image_url || ""}

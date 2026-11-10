@@ -5,7 +5,7 @@ import { useCreateProductMutation } from "@/lib/queries/admin";
 import { uploadImageToStorage } from "@/lib/queries/storage";
 import { toast } from "sonner";
 import { ImgPreview, useDetailImagePreview } from "@/hooks/useImagePreview";
-import ImagePreviews from "./ImagePreview";
+import ImagePreviews from "@/components/common/ImagePreview";
 import { useAuthStore } from "@/lib/store/useAuthStore";
 import DetailImagePreview from "@/components/common/DetailImagePreview";
 import {

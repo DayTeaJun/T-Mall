@@ -8,7 +8,7 @@ import { uploadImageToStorage } from "@/lib/queries/storage";
 import { User } from "@supabase/supabase-js";
 import { ImgPreview } from "@/hooks/useImagePreview";
 import DaumPostcode from "@/components/common/AddressSearch";
-import ImagePreviews from "@/app/(member)/mypage/profile/edit/_components/ImagePreview_Profile";
+import ImagePreviews from "@/components/common/ImagePreview";
 import PolicyForm from "../../signup/_components/PolicyForm";
 import { useAuthStore } from "@/lib/store/useAuthStore";
 import { toast } from "sonner";
@@ -173,6 +173,7 @@ export default function OnboardingForm({ user }: Props) {
           </div>
 
           <ImagePreviews
+            variant="circle"
             imageSrc={imageSrc || ""}
             onUpload={handleProfileImageChange}
             className="w-20 h-20 sm:w-24 sm:h-24"
