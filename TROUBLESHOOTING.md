@@ -82,3 +82,11 @@
 그런데 "이 함수를 쓰는 다른 곳엔 이 콘솔 에러가 필요한 경우도 있지 않냐"는 질문을 받고 호출부를 다시 전부 확인해보니, `createServerSupabaseClient` **하나를 Server Component(`page.tsx`)뿐 아니라 로그인(`signInUser`) 같은 Server Action, OAuth 콜백 같은 Route Handler에서도 똑같이 쓰고 있었습니다.** Server Action/Route Handler는 응답이 아직 확정되기 전이라 쿠키 쓰기가 실제로 성공해야 하는 컨텍스트인데, 같은 `catch` 블록을 공유하다 보니 "항상 무해한 실패"와 "로그인 세션이 실제로 안 심기는 실패"를 구분하지 못하고 있었습니다. 로그를 통째로 지우면 후자도 조용히 삼켜져서, 로그인은 성공한 것처럼 보이는데 세션 쿠키는 안 심긴 상황을 디버깅할 방법이 없어질 뻔했습니다.
 
 그래서 함수를 두 개로 나눴습니다 — Server Component용(`createServerSupabaseClient`, set/remove가 아예 아무 것도 안 함)과 Server Action/Route Handler용(`createActionSupabaseClient`, 실패하면 `console.error`로 실제로 남김). `lib/actions/*.ts`와 `app/api/auth/callback/route.ts`의 호출부를 전부 후자로 옮겼습니다.
+
+### 이미지 업로더 두 개를 하나로 합치다가 발견한, 원래부터 있던 버그
+
+상품 등록/수정 폼의 대표 이미지 업로더(사각, 삭제가능)와 프로필/온보딩의 이미지 업로더(원형, 삭제불가)가 드래그앤드롭·업로드 로직을 거의 그대로 복붙하고 있어서, `components/common/ImagePreview.tsx`로 합치고 `variant` prop으로 모양만 가르기로 했습니다. 다 합치고 나서 "결과적으로 모양만 바뀌고 안은 다 똑같은 거냐"는 질문을 받고 코드를 다시 짚어보다가, 두 컴포넌트 모두 가지고 있던 기존 버그를 하나 발견했습니다.
+
+`hooks/useImagePreview.ts`의 `onUpload`는 파일 확장자가 이상하면 `toast.error`만 띄우고 아무 상태도 안 바꾸는데, 이 컴포넌트를 쓰는 쪽(`EditProductForm.tsx`, 프로필 수정, 온보딩)은 전부 업로드 성공/실패를 확인하지 않고 **무조건** 기존 이미지 URL 상태(`mainImage`/`profileImage`)를 비우고 있었습니다. 그래서 수정 중인 상품/프로필에 이미지가 아닌 파일을 잘못 선택하기만 해도, 화면엔 "업로드 해주세요" 빈 상태가 뜨고, 그 상태로 제출하면 **실제로 기존 이미지가 DB에서 null로 덮어써질 수 있는** 경로였습니다. 두 컴포넌트가 따로 있을 때부터 각자 가지고 있던 문제라, 합치는 작업을 안 했으면 한동안 더 발견 못 했을 수도 있습니다.
+
+`onUpload`가 성공 여부를 `boolean`으로 돌려주도록 바꾸고, 호출부들이 그 값을 보고 성공했을 때만 기존 이미지 상태를 비우도록 고쳤습니다.
