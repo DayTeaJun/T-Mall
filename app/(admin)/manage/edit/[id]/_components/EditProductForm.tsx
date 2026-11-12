@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
-import { ImgPreview, useDetailImagePreview } from "@/hooks/useImagePreview";
+import { ImgPreview, useMergedDetailImages } from "@/hooks/useImagePreview";
 import { useUpdateProductMutation } from "@/lib/queries/admin";
 import { uploadImageToStorage } from "@/lib/queries/storage";
 import { useAuthStore } from "@/lib/store/useAuthStore";
@@ -109,24 +109,19 @@ export default function EditProductForm({
     setMainImage("");
   };
 
-  const { detailFiles, detailPreviews, detailOnUpload, removeDetailImage } =
-    useDetailImagePreview();
-
-  const [existingDetailImages, setExistingDetailImages] = useState(
+  const {
+    existingImages: existingDetailImages,
+    detailFiles,
+    previews: detailImagePreviews,
+    detailOnUpload,
+    removeAt: handleDetailImageRemove,
+  } = useMergedDetailImages(
     product.product_images?.map((img) => ({
       id: img.id,
       url: img.image_url,
     })) ?? [],
+    (img) => img.url,
   );
-
-  const handleDetailImageRemove = (index: number) => {
-    if (index < existingDetailImages.length) {
-      setExistingDetailImages((prev) => prev.filter((_, i) => i !== index));
-    } else {
-      const adjustedIndex = index - existingDetailImages.length;
-      removeDetailImage(adjustedIndex);
-    }
-  };
 
   const { mutate, isPending } = useUpdateProductMutation(product.id);
 
@@ -298,10 +293,7 @@ export default function EditProductForm({
         mainImageEditImage={mainImage}
         onMainImageUpload={handleMainImageUpload}
         onMainImageRemove={handleMainImageRemove}
-        detailImagePreviews={[
-          ...existingDetailImages.map((img) => img.url),
-          ...detailPreviews,
-        ]}
+        detailImagePreviews={detailImagePreviews}
         onDetailImageUpload={detailOnUpload}
         onDetailImageRemove={handleDetailImageRemove}
       />

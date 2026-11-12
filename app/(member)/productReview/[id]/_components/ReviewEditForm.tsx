@@ -8,7 +8,7 @@ import { ProductType } from "@/types/product";
 import { toast } from "sonner";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { useDetailImagePreview } from "@/hooks/useImagePreview";
+import { useMergedDetailImages } from "@/hooks/useImagePreview";
 import DetailImagePreview from "@/components/common/DetailImagePreview";
 import { queryClient } from "@/components/providers/ReactQueryProvider";
 
@@ -23,10 +23,15 @@ function ReviewEditForm({
   const [reviewText, setReviewText] = useState("");
   const [hoveredStar, setHoveredStar] = useState<number | null>(null);
 
-  const { detailFiles, detailPreviews, detailOnUpload, removeDetailImage } =
-    useDetailImagePreview();
+  const {
+    existingImages,
+    setExistingImages,
+    detailFiles,
+    previews: detailImagePreviews,
+    detailOnUpload,
+    removeAt: handleDetailImageRemove,
+  } = useMergedDetailImages<string>([], (url) => url);
 
-  const [existingImages, setExistingImages] = useState<string[]>([]);
   const [originalImages, setOriginalImages] = useState<string[]>([]);
 
   const router = useRouter();
@@ -172,15 +177,9 @@ function ReviewEditForm({
       />
 
       <DetailImagePreview
-        previews={[...existingImages, ...detailPreviews]}
+        previews={detailImagePreviews}
         onUpload={detailOnUpload}
-        onRemove={(index) => {
-          if (index < existingImages.length) {
-            setExistingImages((prev) => prev.filter((_, i) => i !== index));
-          } else {
-            removeDetailImage(index - existingImages.length);
-          }
-        }}
+        onRemove={handleDetailImageRemove}
       />
 
       <div className="flex justify-end gap-2 mt-4">

@@ -104,3 +104,36 @@ export function useDetailImagePreview() {
 
   return { detailFiles, detailPreviews, detailOnUpload, removeDetailImage };
 }
+
+// 기존 이미지(T[])와 새로 추가한 이미지(useDetailImagePreview)를 합쳐서
+// 보여주고, 삭제 시 "합쳐진 목록에서의 위치"를 "기존/신규 중 어느 쪽의
+// 몇 번째인지"로 알아서 환산해줌. 상품 수정(상세이미지 {id,url}[])과
+// 리뷰 수정(상세이미지 string[])처럼, 기존 이미지의 모양이 달라도
+// toUrl로 URL만 뽑아내면 공용으로 쓸 수 있음.
+export function useMergedDetailImages<T>(
+  initialExisting: T[],
+  toUrl: (item: T) => string,
+) {
+  const [existingImages, setExistingImages] = useState<T[]>(initialExisting);
+  const { detailFiles, detailPreviews, detailOnUpload, removeDetailImage } =
+    useDetailImagePreview();
+
+  const previews = [...existingImages.map(toUrl), ...detailPreviews];
+
+  const removeAt = (index: number) => {
+    if (index < existingImages.length) {
+      setExistingImages((prev) => prev.filter((_, i) => i !== index));
+    } else {
+      removeDetailImage(index - existingImages.length);
+    }
+  };
+
+  return {
+    existingImages,
+    setExistingImages,
+    detailFiles,
+    previews,
+    detailOnUpload,
+    removeAt,
+  };
+}
