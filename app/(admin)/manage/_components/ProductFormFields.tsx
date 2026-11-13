@@ -4,6 +4,7 @@ import ImagePreviews from "@/components/common/ImagePreview";
 import DetailImagePreview from "@/components/common/DetailImagePreview";
 import { SIZE_OPTIONS_MAP } from "@/lib/constants/categories";
 import BasicInfoSection from "./productFormSections/BasicInfoSection";
+import DescriptionSection from "./productFormSections/DescriptionSection";
 
 interface Props {
   basicInfoHeading: string;
@@ -112,18 +113,10 @@ export default function ProductFormFields({
           onTagsChange={onTagsChange}
         />
 
-        <div className="bg-white p-6 border border-gray-200 flex flex-col flex-1 space-y-4">
-          <h3 className="font-semibold text-gray-800 border-b pb-2">
-            상세 설명
-            <span className="text-red-500 pl-1">*</span>
-          </h3>
-          <textarea
-            value={description}
-            onChange={(e) => onDescriptionChange(e.target.value)}
-            className="w-full flex-1 border border-gray-300 p-3 text-sm focus:outline-none resize-none"
-            placeholder="상품 상세 설명을 입력하세요."
-          />
-        </div>
+        <DescriptionSection
+          description={description}
+          onDescriptionChange={onDescriptionChange}
+        />
       </div>
 
       <div className="flex flex-col h-full gap-6">
