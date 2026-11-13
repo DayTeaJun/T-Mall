@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { Json } from "@/lib/config/supabase/types_db";
 import { SIZE_OPTIONS_MAP } from "@/lib/constants/categories";
 import ProductFormFields from "@/app/(admin)/manage/_components/ProductFormFields";
+import { useProductFormFields } from "@/hooks/useProductFormFields";
 
 interface ProductWithImages {
   category: string | null;
@@ -48,42 +49,36 @@ export default function EditProductForm({
 }) {
   const sizeOptionsMap = SIZE_OPTIONS_MAP;
 
-  const [name, setName] = useState(product.name);
-  const [description, setDescription] = useState(product.description || "");
-
-  const baseInitialPrice = product.original_price ?? product.price;
-  const [price, setPrice] = useState(String(baseInitialPrice));
-
-  const [discountType, setDiscountType] = useState<"" | "percentage" | "fixed">(
-    (product.discount_type as "" | "percentage" | "fixed") || "",
-  );
-
-  const [discountValue, setDiscountValue] = useState(
-    product.discount_value != null ? String(product.discount_value) : "",
-  );
-
-  const [tags, setTags] = useState((product.tags || []).join(", "));
-  const [category, setCategory] = useState(product.category || "");
-  const [subcategory, setSubcategory] = useState(product.subcategory || "");
-  const [gender, setGender] = useState(product.gender || "");
-  const [color, setColor] = useState(product.color || "");
+  const {
+    name,
+    setName,
+    description,
+    setDescription,
+    price,
+    setPrice,
+    discountType,
+    setDiscountType,
+    discountValue,
+    setDiscountValue,
+    tags,
+    setTags,
+    category,
+    handleCategoryClick,
+    subcategory,
+    setSubcategory,
+    gender,
+    setGender,
+    color,
+    setColor,
+    selectedSizes,
+    handleSizeToggle,
+    stockBySize,
+    handleStockChange,
+    singleStock,
+    setSingleStock,
+  } = useProductFormFields(product);
 
   const [mainImage, setMainImage] = useState(product.image_url || "");
-
-  const initialStock = (product.stock_by_size as Record<string, number>) || {};
-  const hasSizes = category
-    ? (sizeOptionsMap[category]?.length || 0) > 0
-    : Object.keys(initialStock).length > 0 && !initialStock["FREE"];
-
-  const [selectedSizes, setSelectedSizes] = useState<string[]>(
-    hasSizes ? Object.keys(initialStock) : [],
-  );
-  const [stockBySize, setStockBySize] = useState<Record<string, number>>(
-    hasSizes ? initialStock : {},
-  );
-  const [singleStock, setSingleStock] = useState<number>(
-    hasSizes ? 0 : initialStock["FREE"] || product.total_stock || 0,
-  );
 
   const [uploading, setUploading] = useState(false);
   const { user } = useAuthStore();
@@ -124,14 +119,6 @@ export default function EditProductForm({
   );
 
   const { mutate, isPending } = useUpdateProductMutation(product.id);
-
-  const handleCategoryClick = (newCategory: string) => {
-    setCategory(newCategory);
-    setSubcategory("");
-    setSelectedSizes([]);
-    setStockBySize({});
-    setSingleStock(0);
-  };
 
   const handleSubmit = async () => {
     const currentHasSizes = sizeOptionsMap[category]?.length > 0;
@@ -240,22 +227,6 @@ export default function EditProductForm({
     } finally {
       setUploading(false);
     }
-  };
-
-  const handleSizeToggle = (size: string) => {
-    if (selectedSizes.includes(size)) {
-      setSelectedSizes(selectedSizes.filter((s) => s !== size));
-      const newStock = { ...stockBySize };
-      delete newStock[size];
-      setStockBySize(newStock);
-    } else {
-      setSelectedSizes([...selectedSizes, size]);
-      setStockBySize({ ...stockBySize, [size]: 0 });
-    }
-  };
-
-  const handleStockChange = (size: string, value: number) => {
-    setStockBySize({ ...stockBySize, [size]: value });
   };
 
   return (
