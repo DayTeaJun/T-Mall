@@ -8,28 +8,39 @@ import { ImgPreview, useDetailImagePreview } from "@/hooks/useImagePreview";
 import { useAuthStore } from "@/lib/store/useAuthStore";
 import { SIZE_OPTIONS_MAP } from "@/lib/constants/categories";
 import ProductFormFields from "@/app/(admin)/manage/_components/ProductFormFields";
+import { useProductFormFields } from "@/hooks/useProductFormFields";
 
 function ProductForm() {
   const sizeOptionsMap = SIZE_OPTIONS_MAP;
 
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState("");
-
-  const [discountType, setDiscountType] = useState<"" | "percentage" | "fixed">(
-    "",
-  );
-  const [discountValue, setDiscountValue] = useState("");
-
-  const [tags, setTags] = useState("");
-  const [category, setCategory] = useState("");
-  const [subcategory, setSubcategory] = useState("");
-  const [gender, setGender] = useState("");
-  const [color, setColor] = useState("");
-
-  const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
-  const [stockBySize, setStockBySize] = useState<Record<string, number>>({});
-  const [singleStock, setSingleStock] = useState<number>(0);
+  const {
+    name,
+    setName,
+    description,
+    setDescription,
+    price,
+    setPrice,
+    discountType,
+    setDiscountType,
+    discountValue,
+    setDiscountValue,
+    tags,
+    setTags,
+    category,
+    handleCategoryClick,
+    subcategory,
+    setSubcategory,
+    gender,
+    setGender,
+    color,
+    setColor,
+    selectedSizes,
+    handleSizeToggle,
+    stockBySize,
+    handleStockChange,
+    singleStock,
+    setSingleStock,
+  } = useProductFormFields();
 
   const [uploading, setUploading] = useState(false);
 
@@ -39,14 +50,6 @@ function ProductForm() {
   const { user } = useAuthStore();
 
   const { mutate } = useCreateProductMutation();
-
-  const handleCategoryClick = (newCategory: string) => {
-    setCategory(newCategory);
-    setSubcategory("");
-    setSelectedSizes([]);
-    setStockBySize({});
-    setSingleStock(0);
-  };
 
   const handleSubmit = async () => {
     const hasSizes = sizeOptionsMap[category]?.length > 0;
@@ -124,22 +127,6 @@ function ProductForm() {
     } finally {
       setUploading(false);
     }
-  };
-
-  const handleSizeToggle = (size: string) => {
-    if (selectedSizes.includes(size)) {
-      setSelectedSizes(selectedSizes.filter((s) => s !== size));
-      const newStock = { ...stockBySize };
-      delete newStock[size];
-      setStockBySize(newStock);
-    } else {
-      setSelectedSizes([...selectedSizes, size]);
-      setStockBySize({ ...stockBySize, [size]: 0 });
-    }
-  };
-
-  const handleStockChange = (size: string, value: number) => {
-    setStockBySize({ ...stockBySize, [size]: value });
   };
 
   return (
