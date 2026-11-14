@@ -7,7 +7,7 @@ import {
 import { SignUpFormData, UserProfileType } from "@/types/user";
 import { extractFilePathFromUrl } from "../utils/supabaseStorageUtils";
 import { Database } from "../config/supabase/types_db";
-import { DeliveryAddressForm } from "@/app/(member)/mypage/delivery/regist/page";
+import { DeliveryAddressForm } from "@/types/delivery";
 
 // 회원가입
 export async function signUpUser(formData: SignUpFormData) {

@@ -7,7 +7,7 @@ import DaumPostcode, {
   DaumPostcodeData,
 } from "@/components/common/AddressSearch";
 import { toast } from "sonner";
-import { DeliveryAddressForm } from "@/app/(member)/mypage/delivery/regist/page";
+import { DeliveryAddressForm } from "@/types/delivery";
 import { formatPhoneNumber, isValidPhoneNumber } from "@/lib/utils/phone";
 
 interface EditDeliveryFormProps {

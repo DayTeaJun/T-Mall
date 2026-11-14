@@ -12,7 +12,7 @@ import {
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { DeliveryAddressForm } from "@/app/(member)/mypage/delivery/regist/page";
+import { DeliveryAddressForm } from "@/types/delivery";
 
 // 내 배송지 조회
 export function useGetAddressList(userId: string | undefined) {

@@ -7,7 +7,7 @@ import { usePatchDeliveryAddressMutation } from "@/lib/queries/delivery";
 import DaumPostcode, {
   DaumPostcodeData,
 } from "@/components/common/AddressSearch";
-import { DeliveryAddressForm } from "../../../regist/page";
+import { DeliveryAddressForm } from "@/types/delivery";
 import { toast } from "sonner";
 import { formatPhoneNumber, isValidPhoneNumber } from "@/lib/utils/phone";
 

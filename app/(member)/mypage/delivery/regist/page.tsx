@@ -9,17 +9,7 @@ import DaumPostcode, {
 } from "@/components/common/AddressSearch";
 import { toast } from "sonner";
 import { formatPhoneNumber, isValidPhoneNumber } from "@/lib/utils/phone";
-
-export interface DeliveryAddressForm {
-  address: string;
-  address_name: string;
-  delivery_instruction: string | null;
-  detail_address: string | null;
-  is_default: boolean | null;
-  postal_code: string;
-  receiver_name: string;
-  receiver_phone: string;
-}
+import { DeliveryAddressForm } from "@/types/delivery";
 
 export default function DeliveryRegisterPage() {
   const router = useRouter();
