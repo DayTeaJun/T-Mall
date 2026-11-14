@@ -1,5 +1,5 @@
 import Link from "next/link";
-import ResetPasswordForm from "./_components/FindPasswordForm";
+import ResetPasswordForm from "./_components/ResetPasswordForm";
 
 function ResetPasswordPage() {
   return (
