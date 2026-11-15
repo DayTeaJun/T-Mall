@@ -25,18 +25,18 @@ export default function AdminOrderList() {
 
   const handlePageChange = (selected: { selected: number }) => {
     const newPage = selected.selected + 1;
-    router.push(`/manage/orderList?query=${keyword}&page=${newPage}`);
+    router.push(`/manage/order-list?query=${keyword}&page=${newPage}`);
   };
 
   const handleSearch = () => {
-    router.push(`/manage/orderList?query=${searchInput}&page=1`);
+    router.push(`/manage/order-list?query=${searchInput}&page=1`);
   };
 
   const handleSearchRefresh = () => {
     setRecent6Months(true);
     setSelectedYear(null);
     setSearchInput("");
-    router.push("/manage/orderList?query=&page=1");
+    router.push("/manage/order-list?query=&page=1");
   };
 
   const { data: orders, isLoading } = useGetOrders(
@@ -53,13 +53,13 @@ export default function AdminOrderList() {
   const handleYearClick = (year: number) => {
     setSelectedYear(year);
     setRecent6Months(false);
-    router.push("/manage/orderList?query=&page=1");
+    router.push("/manage/order-list?query=&page=1");
   };
 
   const handleRecentClick = () => {
     setSelectedYear(null);
     setRecent6Months(true);
-    router.push("/manage/orderList?query=&page=1");
+    router.push("/manage/order-list?query=&page=1");
   };
 
   const statusOptions = [
@@ -198,7 +198,7 @@ export default function AdminOrderList() {
               <button
                 onClick={() =>
                   router.push(
-                    `/manage/orderList/orderDetail?orderId=${order.id}`,
+                    `/manage/order-list/order-detail?orderId=${order.id}`,
                   )
                 }
                 className="text-sm hover:underline"

@@ -131,7 +131,7 @@ export default function MyCartPage() {
     if (effectiveCouponId) {
       query.append("couponId", effectiveCouponId);
     }
-    router.push(`/mypage/myCart/checkout?${query.toString()}`);
+    router.push(`/mypage/my-cart/checkout?${query.toString()}`);
   };
 
   const toggleSelectAll = () => {

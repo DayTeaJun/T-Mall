@@ -122,7 +122,7 @@ export default function MyReviewsList() {
             <div className="flex items-center justify-end gap-2 text-xs sm:text-sm text-gray-500 border-t border-gray-100 pt-2 sm:pt-0 sm:border-none">
               <button
                 onClick={() =>
-                  router.push(`/productReview/${review.product_id}?from=mypage`)
+                  router.push(`/product-review/${review.product_id}?from=mypage`)
                 }
                 className="hover:text-blue-600 px-2 py-1 border border-gray-300 bg-white rounded-xs"
               >

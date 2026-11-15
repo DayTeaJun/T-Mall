@@ -180,9 +180,9 @@ export function useDeleteOrderMutation(userId: string, page?: string) {
       ]);
       toast.success("주문 내역이 삭제되었습니다.");
       if (page === "manage") {
-        router.replace("/manage/orderList");
+        router.replace("/manage/order-list");
       } else {
-        router.replace("/mypage/orderList?page=1");
+        router.replace("/mypage/order-list?page=1");
       }
     },
     onError: (error) => {

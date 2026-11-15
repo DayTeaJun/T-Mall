@@ -97,7 +97,7 @@ export default function OrderListPage() {
         <p className="text-sm">삭제된 주문이거나 존재하지 않는 주문입니다.</p>
         <button
           className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md"
-          onClick={() => router.replace("/mypage/orderList")}
+          onClick={() => router.replace("/mypage/order-list")}
         >
           주문 목록으로 이동
         </button>
@@ -229,7 +229,7 @@ export default function OrderListPage() {
                 {item.delivery_status === "배송완료" && (
                   <button
                     onClick={() =>
-                      router.push(`/productReview/${item.products.id}`)
+                      router.push(`/product-review/${item.products.id}`)
                     }
                     className="w-30 border rounded-md px-2 py-1 text-[14px] text-gray-700 hover:bg-gray-200 cursor-pointer"
                   >

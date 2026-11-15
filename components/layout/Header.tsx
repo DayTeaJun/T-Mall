@@ -37,7 +37,7 @@ async function Header({ user }: { user: UserType | null }) {
 
                 {user.level === 3 && (
                   <Link
-                    href="/manage/dashBoard"
+                    href="/manage/dashboard"
                     className="text-black sm:flex gap-1 items-center hidden"
                   >
                     <p className="text-[12px] sm:text-[14px]">관리자</p>
@@ -47,7 +47,7 @@ async function Header({ user }: { user: UserType | null }) {
 
                 {user.level === 2 && (
                   <Link
-                    href="/manage/dashBoard"
+                    href="/manage/dashboard"
                     className="text-black sm:flex gap-1 items-center hidden"
                   >
                     <p className="text-[12px] sm:text-[14px]">판매자</p>

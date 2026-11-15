@@ -173,7 +173,7 @@ function UserOrderLists({ userId }: UserOrderListsProps) {
                             <button
                               onClick={() =>
                                 router.push(
-                                  `/manage/orderList/orderDetail?orderId=${order.id}`,
+                                  `/manage/order-list/order-detail?orderId=${order.id}`,
                                 )
                               }
                               className="p-2 hover:bg-gray-100 rounded-lg transition-all"
@@ -220,7 +220,7 @@ function UserOrderLists({ userId }: UserOrderListsProps) {
                         <button
                           onClick={() =>
                             router.push(
-                              `/manage/orderList/orderDetail?orderId=${order.id}`,
+                              `/manage/order-list/order-detail?orderId=${order.id}`,
                             )
                           }
                           type="button"

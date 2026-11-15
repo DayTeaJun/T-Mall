@@ -4,12 +4,12 @@ import { updateSession } from "./lib/config/supabase/server/middleware";
 // 로그인 필요
 const protectedRoutes = [
   "/mypage",
-  "/myCart",
+  "/my-cart",
   "/manage",
   "/manage/regist",
-  "/manage/orderList",
-  "/productReview",
-  "/directCheckout",
+  "/manage/order-list",
+  "/product-review",
+  "/direct-checkout",
   "/restricted",
 ];
 

@@ -24,7 +24,6 @@ export default function CheckoutDonePage() {
     (total: number, item: OrderItemType) => total + item.price * item.quantity,
     0,
   );
-
   if (!orderId) {
     toast.error("잘못된 접근입니다.");
     router.push("/");
@@ -66,8 +65,8 @@ export default function CheckoutDonePage() {
           <li
             key={idx}
             className={`flex gap-4 items-center ${
-              idx < order.order_items.length - 1 ? "border-b" : ""
-            } pb-4`}
+              idx < order.order_items.length - 1 ? "border-b pb-4" : "pb-0"
+            }`}
           >
             <Image
               width={200}
@@ -87,15 +86,15 @@ export default function CheckoutDonePage() {
         ))}
       </ul>
 
-      <div className="border rounded p-4 mb-6 bg-gray-50 space-y-2">
-        <div className="flex items-center gap-2 text-sm text-gray-700">
+      <div className="border rounded p-2 sm:p-4 mb-2 text-[12px] sm:text-sm bg-gray-50 space-y-2">
+        <div className="flex items-center gap-2 text-gray-700">
           <UserRound size={16} />
           <span className="font-bold">
             수령인 :{" "}
             <span className="font-normal">{order.receiver || "정보 없음"}</span>
           </span>
         </div>
-        <div className="flex items-center gap-2 text-sm text-gray-700">
+        <div className="flex items-center gap-2 text-gray-700">
           <Package size={16} />
           <span className="font-bold">
             배송지 :{" "}
@@ -104,7 +103,7 @@ export default function CheckoutDonePage() {
             </span>
           </span>
         </div>
-        <div className="flex items-center gap-2 text-sm text-gray-700">
+        <div className="flex items-center gap-2 text-gray-700">
           <StickyNote size={16} />
           <span className="font-bold">
             배송 요청사항 :{" "}
@@ -164,7 +163,7 @@ export default function CheckoutDonePage() {
       <div className="flex justify-end mt-2 mb-10">
         <button
           className="text-sm sm:text-14 font-semibold px-6 py-2 text-white bg-gray-700"
-          onClick={() => router.push("/mypage/orderList?page=1")}
+          onClick={() => router.push("/mypage/order-list?page=1")}
         >
           주문 내역 보기
         </button>

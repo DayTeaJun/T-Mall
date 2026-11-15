@@ -55,7 +55,7 @@ function LatestOrderLists() {
           최근 주문 목록
         </p>
         <button
-          onClick={() => router.push("/manage/orderList?query=&page=1")}
+          onClick={() => router.push("/manage/order-list?query=&page=1")}
           className="group flex items-center gap-1 text-sm text-gray-500 hover:text-black transition-all duration-300"
         >
           <span className="transition-all duration-300">전체 보기</span>
@@ -108,7 +108,7 @@ function LatestOrderLists() {
                     <button
                       onClick={() =>
                         router.push(
-                          `/manage/orderList/orderDetail?orderId=${order.id}`,
+                          `/manage/order-list/order-detail?orderId=${order.id}`,
                         )
                       }
                       type="button"
@@ -204,7 +204,7 @@ function LatestOrderLists() {
                     key={order.id}
                     onClick={() =>
                       router.push(
-                        `/manage/orderList/orderDetail?orderId=${order.id}`,
+                        `/manage/order-list/order-detail?orderId=${order.id}`,
                       )
                     }
                     className="border-b border-gray-50 last:border-none hover:bg-gray-50 transition-colors cursor-pointer group"

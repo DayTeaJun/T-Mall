@@ -26,7 +26,7 @@ export default function SideQuickMenu() {
   return (
     <div className="w-full border border-gray-300 bg-white text-center text-xs select-none shadow-sm">
       <Link
-        href="/mypage/myCart"
+        href="/mypage/my-cart"
         className="block bg-[#343a40] text-white py-2.5 px-3 border-b border-[#495057] hover:bg-[#212529] transition-colors"
       >
         <div className="flex justify-between items-center font-medium">

@@ -2,15 +2,8 @@
 
 import { XCircle } from "lucide-react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 
 export default function CheckoutFailPage() {
-  const searchParams = useSearchParams();
-  const productIdFromParam = searchParams.get("productId") ?? "";
-
-  const sizeParam = searchParams.get("size") ?? "";
-  const quantity = searchParams.get("quantity") ?? "1";
-
   return (
     <div className="flex flex-col justify-center items-center h-[60vh] text-gray-700">
       <XCircle size={64} className="text-red-500 mb-4" />
@@ -21,10 +14,10 @@ export default function CheckoutFailPage() {
 
       <div className="flex gap-4 mt-6">
         <Link
-          href={`/directCheckout?productId=${productIdFromParam}&size=${sizeParam}&quantity=${quantity}`}
+          href="/mypage/my-cart"
           className="px-6 py-2 bg-gray-200 rounded hover:bg-gray-300 transition"
         >
-          다시 시도하기
+          장바구니로 돌아가기
         </Link>
         <Link
           href="/"

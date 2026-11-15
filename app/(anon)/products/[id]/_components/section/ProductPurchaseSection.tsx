@@ -78,7 +78,7 @@ export default function ProductPurchaseSection({
     if (!validateQuantity()) return;
 
     router.push(
-      `/directCheckout?productId=${productId}&size=${selectedSize}&quantity=${quantity}`,
+      `/direct-checkout?productId=${productId}&size=${selectedSize}&quantity=${quantity}`,
     );
   };
 

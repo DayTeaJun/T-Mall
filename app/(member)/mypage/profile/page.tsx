@@ -72,7 +72,7 @@ export default function ProfilePage() {
       toast.error("테스트 계정은 비밀번호 재설정을 할 수 없습니다.");
       return;
     }
-    router.push("/mypage/profile/resetPassword");
+    router.push("/mypage/profile/reset-password");
   };
 
   const handleDelete = async () => {

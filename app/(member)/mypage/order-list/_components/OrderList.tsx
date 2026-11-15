@@ -35,18 +35,18 @@ export default function OrderList() {
 
   const handlePageChange = (selected: { selected: number }) => {
     const newPage = selected.selected + 1;
-    router.push(`/mypage/orderList?query=${keyword}&page=${newPage}`);
+    router.push(`/mypage/order-list?query=${keyword}&page=${newPage}`);
   };
 
   const handleSearch = () => {
-    router.push(`/mypage/orderList?query=${searchInput}&page=1`);
+    router.push(`/mypage/order-list?query=${searchInput}&page=1`);
   };
 
   const handleSearchRefresh = () => {
     setRecent6Months(false);
     setSelectedYear(null);
     setSearchInput("");
-    router.push("/mypage/orderList?query=&page=1");
+    router.push("/mypage/order-list?query=&page=1");
   };
 
   const { data: orders, isLoading } = useGetOrders(
@@ -74,13 +74,13 @@ export default function OrderList() {
   const handleYearClick = (year: number) => {
     setSelectedYear(year);
     setRecent6Months(false);
-    router.push("/mypage/orderList?query=&page=1");
+    router.push("/mypage/order-list?query=&page=1");
   };
 
   const handleRecentClick = () => {
     setSelectedYear(null);
     setRecent6Months(true);
-    router.push("/mypage/orderList?query=&page=1");
+    router.push("/mypage/order-list?query=&page=1");
   };
 
   const handleCancelOrder = () => {
@@ -223,7 +223,7 @@ export default function OrderList() {
               <button
                 onClick={() =>
                   router.push(
-                    `/mypage/orderList/orderDetail?orderId=${order.id}`,
+                    `/mypage/order-list/order-detail?orderId=${order.id}`,
                   )
                 }
                 type="button"
@@ -345,7 +345,7 @@ export default function OrderList() {
                             </button>
                             <button
                               onClick={() =>
-                                router.push(`/productReview/${item.product_id}`)
+                                router.push(`/product-review/${item.product_id}`)
                               }
                               className="border rounded-md px-2 sm:py-1 py-2 text-sm text-gray-700 hover:bg-gray-200 cursor-pointer"
                             >

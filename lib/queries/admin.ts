@@ -32,7 +32,7 @@ export const useCreateProductMutation = () => {
         }),
       ]);
       toast.success("상품 등록이 완료되었습니다.");
-      router.push("/manage/productList");
+      router.push("/manage/product-list");
     },
     onError: (error) => {
       console.error("상품 등록 실패:", error);

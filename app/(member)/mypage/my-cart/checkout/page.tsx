@@ -124,8 +124,8 @@ export default function CheckoutPage() {
         orderName: `${selectedCartItems[0]?.product?.name ?? "상품"} 외 ${
           selectedCartItems.length - 1
         }건`,
-        successUrl: `${window.location.origin}/mypage/myCart/checkout/success`,
-        failUrl: `${window.location.origin}/mypage/myCart/checkout/fail`,
+        successUrl: `${window.location.origin}/mypage/my-cart/checkout/success`,
+        failUrl: `${window.location.origin}/mypage/my-cart/checkout/fail`,
         customerName: defaultAddress?.receiver_name ?? "",
         customerEmail: user?.email ?? "",
         customerMobilePhone:
@@ -197,7 +197,7 @@ export default function CheckoutPage() {
                     className="text-sm underline text-gray-500 sm:ml-0 ml-auto"
                     onClick={() =>
                       router.push(
-                        `/mypage/profile/edit?from=mypage/myCart/checkout?itemIds=${itemIds}`,
+                        `/mypage/profile/edit?from=mypage/my-cart/checkout?itemIds=${itemIds}`,
                       )
                     }
                   >

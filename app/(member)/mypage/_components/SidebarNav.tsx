@@ -31,13 +31,13 @@ const menuGroups = [
     items: [
       {
         name: "장바구니",
-        currentPage: "/mypage/myCart",
-        href: "/mypage/myCart",
+        currentPage: "/mypage/my-cart",
+        href: "/mypage/my-cart",
       },
       {
         name: "주문 내역",
-        currentPage: "/mypage/orderList",
-        href: "/mypage/orderList?page=1",
+        currentPage: "/mypage/order-list",
+        href: "/mypage/order-list?page=1",
       },
     ],
   },
@@ -140,7 +140,7 @@ export default function SidebarNav({ user }: Props) {
           {user?.level === 3 && (
             <div className="border-b last:border-b-0 py-3">
               <Link
-                href="/manage/dashBoard"
+                href="/manage/dashboard"
                 className="text-xs text-gray-500 flex items-center gap-2 hover:text-red-400 px-1"
               >
                 <UserCog size={14} />
@@ -195,7 +195,7 @@ export default function SidebarNav({ user }: Props) {
         {user?.level === 3 ? (
           <div className="mt-6 pt-4 border-t">
             <Link
-              href="/manage/dashBoard"
+              href="/manage/dashboard"
               className="text-xs text-gray-500 uppercase flex items-center gap-2 hover:text-red-400 px-2"
             >
               <UserCog size={14} />
@@ -205,7 +205,7 @@ export default function SidebarNav({ user }: Props) {
         ) : user?.level === 2 ? (
           <div className="mt-6 pt-4 border-t">
             <Link
-              href="/manage/dashBoard"
+              href="/manage/dashboard"
               className="text-xs text-gray-500 uppercase flex items-center gap-2 hover:text-red-400 px-2"
             >
               <MonitorCog size={14} />

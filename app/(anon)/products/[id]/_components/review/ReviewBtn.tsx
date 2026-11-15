@@ -68,7 +68,7 @@ function ReviewBtn({ productId }: { productId: string }) {
 
   const label = hasReview ? "리뷰 수정하기" : "리뷰 작성하기";
   return (
-    <Link href={`/productReview/${productId}`} className="cursor-pointer">
+    <Link href={`/product-review/${productId}`} className="cursor-pointer">
       <span className="text-sm text-blue-600 hover:underline">{label}</span>
     </Link>
   );

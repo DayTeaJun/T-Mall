@@ -37,7 +37,7 @@ export default function CheckoutSuccessPage() {
         }
 
         // 가격/할인 계산과 Toss 승인은 서버(confirmOrder)에서 다시 검증하며 처리됨.
-        // 바로구매는 장바구니를 거치지 않으므로 clearCartAfter는 false.
+        // 여기서는 상품/수량/옵션만 넘기고, 가격은 절대 클라이언트에서 넘기지 않음.
         const { orderId: newOrderId } = await confirmOrder({
           orderId,
           paymentKey,
@@ -50,7 +50,7 @@ export default function CheckoutSuccessPage() {
             quantity: item.quantity,
             size: item.options?.size ?? null,
           })),
-          clearCartAfter: false,
+          clearCartAfter: true,
         });
 
         router.refresh();
@@ -61,13 +61,13 @@ export default function CheckoutSuccessPage() {
         sessionStorage.removeItem("couponId");
 
         toast.success("주문이 완료되었습니다.");
-        window.location.href = `/mypage/myCart/checkout/successDone?orderId=${newOrderId}`;
+        window.location.href = `/mypage/my-cart/checkout/success-done?orderId=${newOrderId}`;
       } catch (err) {
         console.error("주문 처리 중 오류 발생:", err);
 
         toast.error("주문 처리 중 오류가 발생했습니다. 장바구니로 이동합니다.");
 
-        setTimeout(() => router.back(), 2500);
+        setTimeout(() => router.replace("/mypage/my-cart"), 2500);
       }
     };
 

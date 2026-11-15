@@ -118,7 +118,7 @@ export default function AvailableReviewsList() {
 
             <div className="flex flex-row-reverse sm:flex-col items-center justify-between sm:justify-center gap-3 sm:gap-4 shrink-0 w-full sm:w-[120px] pt-3 sm:pt-0 border-t border-dashed border-gray-100 sm:border-none self-stretch sm:self-center">
               <button
-                onClick={() => router.push(`/productReview/${item.product_id}`)}
+                onClick={() => router.push(`/product-review/${item.product_id}`)}
                 className="flex-1 sm:flex-none w-full py-2 border border-blue-500 text-blue-600 text-xs sm:text-sm font-semibold rounded-sm hover:bg-blue-50/50 transition-colors text-center"
               >
                 리뷰 작성하기

@@ -28,8 +28,8 @@ export default function MobileBottomTabBar() {
   const cartCount = cartItems?.length ?? 0;
 
   const isMyPage =
-    pathname.startsWith("/mypage") && !pathname.startsWith("/mypage/myCart");
-  const isCart = pathname.startsWith("/mypage/myCart");
+    pathname.startsWith("/mypage") && !pathname.startsWith("/mypage/my-cart");
+  const isCart = pathname.startsWith("/mypage/my-cart");
   const isHome = pathname === "/";
   const isBookmark = pathname.startsWith("/mypage/bookmark");
   const isAdminRoute = pathname.startsWith("/manage");
@@ -64,7 +64,7 @@ export default function MobileBottomTabBar() {
         </Link>
 
         {isAdmin ? (
-          <Link href="/manage/dashBoard" className={tabClass(isAdminRoute)}>
+          <Link href="/manage/dashboard" className={tabClass(isAdminRoute)}>
             <Settings size={20} />
           </Link>
         ) : (
@@ -73,7 +73,7 @@ export default function MobileBottomTabBar() {
           </Link>
         )}
 
-        <Link href="/mypage/myCart" className={tabClass(isCart)}>
+        <Link href="/mypage/my-cart" className={tabClass(isCart)}>
           <span className="relative">
             <ShoppingCart size={20} />
             {cartCount > 0 && (
