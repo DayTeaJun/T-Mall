@@ -90,3 +90,9 @@
 `hooks/useImagePreview.ts`의 `onUpload`는 파일 확장자가 이상하면 `toast.error`만 띄우고 아무 상태도 안 바꾸는데, 이 컴포넌트를 쓰는 쪽(`EditProductForm.tsx`, 프로필 수정, 온보딩)은 전부 업로드 성공/실패를 확인하지 않고 **무조건** 기존 이미지 URL 상태(`mainImage`/`profileImage`)를 비우고 있었습니다. 그래서 수정 중인 상품/프로필에 이미지가 아닌 파일을 잘못 선택하기만 해도, 화면엔 "업로드 해주세요" 빈 상태가 뜨고, 그 상태로 제출하면 **실제로 기존 이미지가 DB에서 null로 덮어써질 수 있는** 경로였습니다. 두 컴포넌트가 따로 있을 때부터 각자 가지고 있던 문제라, 합치는 작업을 안 했으면 한동안 더 발견 못 했을 수도 있습니다.
 
 `onUpload`가 성공 여부를 `boolean`으로 돌려주도록 바꾸고, 호출부들이 그 값을 보고 성공했을 때만 기존 이미지 상태를 비우도록 고쳤습니다.
+
+### 모달을 열면 배경 스크롤이 맨 위로 튀던 버그
+
+손수 만든 `Modal`을 shadcn Dialog(Radix)로 교체한 뒤, 모달을 여는 순간 배경 페이지 스크롤이 항상 맨 위로 리셋되는 증상이 보고됐습니다. 처음엔 Radix가 열릴 때 포커스를 옮기면서(`onOpenAutoFocus`) `scrollIntoView` 비슷한 부작용을 내는 거라 추측해 `preventDefault`로 막아봤지만 증상은 그대로였고, 오히려 배경에 `aria-hidden`이 걸린 포커스 요소 경고만 새로 생겼습니다. 다음엔 `<body>`의 `min-h-screen flex flex-col`이 원인이라 보고 그 클래스를 별도 wrapper `div`로 옮겨봤는데, 그래도 재현됐습니다.
+
+브라우저 자동화로 모달 열기 전/후의 `scrollHeight`, `overflow`, `body`의 실제 렌더링 높이(`getBoundingClientRect`)를 직접 찍어보고서야 진짜 원인을 찾았습니다. `styles/globals.css`에 `html, body { height: 100% }`가 있었고, 이건 `min-height`가 아니라 **고정값**이라 `<body>`가 항상 정확히 뷰포트 높이 박스였습니다 — 실제 내용은 그보다 길어도 `overflow: visible`(기본값) 덕분에 박스 밖으로 삐져나와 보였고, 그 삐져나온 부분을 `<html>`이 스크롤해서 보여주던 구조였습니다. Radix Dialog가 모달이 열려있는 동안 배경 스크롤을 막으려고 `<body>`에 `overflow: hidden`을 거는데, 이미 뷰포트 높이로 고정된 박스에 `overflow: hidden`이 걸리면 삐져나와 있던 내용이 그대로 잘려버려서 `scrollHeight`가 뷰포트 높이와 같아지고, 스크롤 가능 범위 자체가 사라지며 스크롤 위치가 0으로 강제됐던 것입니다. `height: 100%`를 `body`에서 빼고 `html`에만 남겨서, `body`는 `min-h-screen`(최소값)에 맞춰 내용 길이대로 자연스럽게 늘어나도록 고쳤습니다. 모달 마이그레이션 때는 멀쩡해 보였다가 뒤늦게 터진 건, 이전의 손수 만든 `Modal`은 배경 스크롤을 막는 로직 자체가 없어서 이 CSS 문제가 애초에 드러날 일이 없었기 때문입니다. [Full-bleed 레이아웃이 유발한 가로 스크롤과 2차 버그](#full-bleed-레이아웃이-유발한-가로-스크롤과-2차-버그)와 마찬가지로, `html`/`body` 중 어느 쪽에 overflow 관련 스타일을 거는지에 따라 전혀 다른 부작용이 나는 사례였습니다.
