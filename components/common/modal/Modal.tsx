@@ -1,6 +1,13 @@
 "use client";
 
-import { X } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { cn } from "@/lib/utils";
 
 interface ModalProps {
   isOpen: boolean;
@@ -19,36 +26,22 @@ export default function Modal({
   children,
   className,
 }: ModalProps) {
-  if (!isOpen) return null;
-
   return (
-    <div
-      className="fixed inset-0 z-50 bg-black/50 flex items-center sm:items-start justify-center sm:pt-10"
-      onClick={onClose}
-    >
-      <div
-        className={`bg-white rounded-2xl shadow-lg w-full max-w-md mx-4 p-4 relative animate-fade-in overflow-hidden ${className}`}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
-        >
-          <X size={20} />
-        </button>
-
-        <h2 className="text-[18px] sm:text-xl font-bold text-gray-900 mb-2">
-          {title}
-        </h2>
-
-        {description && (
-          <p className="text-[12px] sm:text-sm text-gray-600 mb-4 whitespace-pre-line">
-            {description}
-          </p>
-        )}
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent className={cn("max-w-md rounded-2xl p-4", className)}>
+        <DialogHeader>
+          <DialogTitle className="text-[18px] sm:text-xl font-bold text-gray-900">
+            {title}
+          </DialogTitle>
+          {description && (
+            <DialogDescription className="text-[12px] sm:text-sm text-gray-600 whitespace-pre-line">
+              {description}
+            </DialogDescription>
+          )}
+        </DialogHeader>
 
         {children}
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }
