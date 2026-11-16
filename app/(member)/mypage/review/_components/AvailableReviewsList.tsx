@@ -162,22 +162,8 @@ export default function AvailableReviewsList() {
         onClose={() => setIsModal({ isOpen: false, orderId: "" })}
         title="리뷰 내역을 숨기시겠습니까?"
         description={`(* 해당 주문은 목록에서 숨겨지며, 삭제 후 2개월간 복구할 수 있습니다.)`}
-      >
-        <div className="flex justify-end gap-2">
-          <button
-            onClick={() => setIsModal({ isOpen: false, orderId: "" })}
-            className="px-4 py-2 text-gray-600 hover:underline"
-          >
-            취소
-          </button>
-          <button
-            onClick={() => handleDelOrderItem(isModal.orderId)}
-            className="px-4 py-2 bg-red-600 text-white rounded"
-          >
-            확인
-          </button>
-        </div>
-      </Modal>
+        onConfirm={() => handleDelOrderItem(isModal.orderId)}
+      />
     </div>
   );
 }

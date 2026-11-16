@@ -4,9 +4,11 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 interface ModalProps {
@@ -16,6 +18,10 @@ interface ModalProps {
   description?: string;
   children?: React.ReactNode;
   className?: string;
+  onConfirm?: () => void;
+  confirmText?: string;
+  cancelText?: string;
+  confirmVariant?: "default" | "destructive";
 }
 
 export default function Modal({
@@ -25,6 +31,10 @@ export default function Modal({
   description,
   children,
   className,
+  onConfirm,
+  confirmText = "확인",
+  cancelText = "취소",
+  confirmVariant = "destructive",
 }: ModalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
@@ -41,6 +51,17 @@ export default function Modal({
         </DialogHeader>
 
         {children}
+
+        {onConfirm && (
+          <DialogFooter className="flex-row justify-end">
+            <Button variant="ghost" onClick={onClose}>
+              {cancelText}
+            </Button>
+            <Button variant={confirmVariant} onClick={onConfirm}>
+              {confirmText}
+            </Button>
+          </DialogFooter>
+        )}
       </DialogContent>
     </Dialog>
   );

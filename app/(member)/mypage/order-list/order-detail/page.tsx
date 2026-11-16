@@ -321,22 +321,9 @@ export default function OrderListPage() {
         onClose={() => setIsModal(false)}
         title="주문내역을 삭제하시겠습니까?"
         description={`(* 해당 주문은 목록에서 숨겨지며, 삭제 후 2개월간 복구할 수 있습니다.)`}
-      >
-        <div className="flex justify-end gap-2">
-          <button
-            onClick={() => setIsModal(false)}
-            className="px-4 py-2 text-gray-600 hover:underline"
-          >
-            취소
-          </button>
-          <button
-            onClick={handleDelOrderItem}
-            className="px-4 py-2 bg-red-600 text-white rounded"
-          >
-            삭제
-          </button>
-        </div>
-      </Modal>
+        onConfirm={handleDelOrderItem}
+        confirmText="삭제"
+      />
 
       <Modal
         isOpen={isCancelOrderModal}
@@ -346,25 +333,10 @@ export default function OrderListPage() {
         }}
         title="정말 주문을 취소하시겠습니까?"
         description={`결제완료 이후의 주문만 취소할 수 있으며,\n취소 후 복구는 불가능합니다.`}
-      >
-        <div className="flex justify-end gap-2">
-          <button
-            onClick={() => {
-              setIsCancelOrderModal(false);
-              setCancelTarget(null);
-            }}
-            className="px-4 py-2 text-gray-600 hover:underline"
-          >
-            아니요
-          </button>
-          <button
-            onClick={handleCancelOrder}
-            className="px-4 py-2 bg-red-600 text-white rounded"
-          >
-            주문 취소
-          </button>
-        </div>
-      </Modal>
+        onConfirm={handleCancelOrder}
+        confirmText="주문 취소"
+        cancelText="아니요"
+      />
     </div>
   );
 }

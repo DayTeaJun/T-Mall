@@ -480,22 +480,9 @@ export default function BookmarkPage() {
         onClose={() => setIsModal(false)}
         title="선택한 상품을 삭제하시겠습니까?"
         description={`* 선택한 상품이 장바구니에서 삭제됩니다. \n (상품페이지에서 다시 상품을 다시 추가할 수 있습니다.)`}
-      >
-        <div className="flex justify-end gap-2">
-          <button
-            onClick={() => setIsModal(false)}
-            className="px-4 py-2 text-gray-600 hover:underline"
-          >
-            취소
-          </button>
-          <button
-            onClick={handleDelSelectFavorites}
-            className="px-4 py-2 bg-red-600 text-white rounded"
-          >
-            삭제
-          </button>
-        </div>
-      </Modal>
+        onConfirm={handleDelSelectFavorites}
+        confirmText="삭제"
+      />
     </div>
   );
 }

@@ -221,24 +221,11 @@ export default function UserDetailClient({ userId }: { userId: string }) {
           user.status === "suspended" ? "계정 활동 제한 해제" : "계정 활동 제한"
         }
         description="(* 계정 활동 제한 시, 해당 유저는 로그인 및 서비스 이용이 불가능해집니다. 제한 해제 시 정상적으로 이용할 수 있습니다.)"
-      >
-        <div className="flex justify-end gap-2">
-          <button
-            onClick={() => setIsModal(false)}
-            className="px-4 py-2 text-gray-600 hover:underline"
-          >
-            취소
-          </button>
-          <button
-            onClick={handleUserActiveToggle}
-            className="px-4 py-2 bg-red-600 text-white rounded"
-          >
-            {user.status === "suspended"
-              ? "계정 활동 제한 해제"
-              : "계정 활동 제한"}
-          </button>
-        </div>
-      </Modal>
+        onConfirm={handleUserActiveToggle}
+        confirmText={
+          user.status === "suspended" ? "계정 활동 제한 해제" : "계정 활동 제한"
+        }
+      />
     </div>
   );
 }

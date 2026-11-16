@@ -165,22 +165,9 @@ export default function ProfilePage() {
         onClose={() => setIsModal(false)}
         title="정말 탈퇴하시겠습니까?"
         description={`* 회원 정보는 모두 삭제되며 복구할 수 없습니다.\n(등록한 댓글 및 기록들은 자동으로 삭제되지 않습니다.)`}
-      >
-        <div className="flex justify-end gap-2">
-          <button
-            onClick={() => setIsModal(false)}
-            className="px-4 py-2 text-gray-600 hover:underline"
-          >
-            취소
-          </button>
-          <button
-            onClick={handleDelete}
-            className="px-4 py-2 bg-red-600 text-white rounded"
-          >
-            탈퇴하기
-          </button>
-        </div>
-      </Modal>
+        onConfirm={handleDelete}
+        confirmText="탈퇴하기"
+      />
     </section>
   );
 }
