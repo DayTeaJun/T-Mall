@@ -1,5 +1,6 @@
 "use client";
 
+import { X } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -38,8 +39,20 @@ export default function Modal({
 }: ModalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className={cn("max-w-md rounded-2xl p-4", className)}>
-        <DialogHeader>
+      <DialogContent className={cn("max-w-md rounded p-6", className)}>
+        <DialogHeader className="items-center text-center sm:text-center">
+          {onConfirm && (
+            <div
+              className={cn(
+                "flex size-14 items-center justify-center rounded-full border-2",
+                confirmVariant === "destructive"
+                  ? "border-destructive text-destructive"
+                  : "border-primary text-primary",
+              )}
+            >
+              <X className="size-6" />
+            </div>
+          )}
           <DialogTitle className="text-[18px] sm:text-xl font-bold text-foreground">
             {title}
           </DialogTitle>
@@ -53,11 +66,15 @@ export default function Modal({
         {children}
 
         {onConfirm && (
-          <DialogFooter className="flex-row justify-end">
-            <Button variant="ghost" onClick={onClose}>
+          <DialogFooter className="flex-row justify-center gap-3">
+            <Button variant="secondary" className="flex-1" onClick={onClose}>
               {cancelText}
             </Button>
-            <Button variant={confirmVariant} onClick={onConfirm}>
+            <Button
+              variant={confirmVariant}
+              className="flex-1"
+              onClick={onConfirm}
+            >
               {confirmText}
             </Button>
           </DialogFooter>
