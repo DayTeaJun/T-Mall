@@ -40,11 +40,11 @@ export default function Modal({
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className={cn("max-w-md rounded-2xl p-4", className)}>
         <DialogHeader>
-          <DialogTitle className="text-[18px] sm:text-xl font-bold text-gray-900">
+          <DialogTitle className="text-[18px] sm:text-xl font-bold text-foreground">
             {title}
           </DialogTitle>
           {description && (
-            <DialogDescription className="text-[12px] sm:text-sm text-gray-600 whitespace-pre-line">
+            <DialogDescription className="text-[12px] sm:text-sm text-muted-foreground whitespace-pre-line">
               {description}
             </DialogDescription>
           )}
