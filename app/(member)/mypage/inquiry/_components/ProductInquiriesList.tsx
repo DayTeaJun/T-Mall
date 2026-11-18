@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useAuthStore } from "@/lib/store/useAuthStore";
 import {
   Loader2,
@@ -16,6 +16,7 @@ import {
   useDelProductInquiry,
   useGetProductInquiries,
 } from "@/lib/queries/inquiry";
+import Modal from "@/components/common/modal/Modal";
 
 export interface ProductInquiry {
   id: number; //
@@ -49,10 +50,12 @@ export default function ProductInquiriesList() {
   );
   const { mutate: deleteInquiry } = useDelProductInquiry(user?.id || "");
 
-  const handleDelInquiry = (inquiryId: number) => {
-    if (confirm("정말로 문의를 삭제하시겠습니까?")) {
-      deleteInquiry(inquiryId);
-    }
+  const [deleteTargetId, setDeleteTargetId] = useState<number | null>(null);
+
+  const handleConfirmDelete = () => {
+    if (deleteTargetId == null) return;
+    deleteInquiry(deleteTargetId);
+    setDeleteTargetId(null);
   };
 
   const handlePageChange = (selected: { selected: number }) => {
@@ -139,7 +142,7 @@ export default function ProductInquiriesList() {
               <span className="text-gray-300 hidden sm:inline">|</span>
 
               <button
-                onClick={() => handleDelInquiry(inquiry.id)}
+                onClick={() => setDeleteTargetId(inquiry.id)}
                 className="hover:text-red-500 px-2.5 py-1 border border-gray-300 bg-white rounded-xs transition-colors font-medium text-gray-700"
               >
                 삭제
@@ -208,6 +211,14 @@ export default function ProductInquiriesList() {
           nextLinkClassName={"page-link"}
         />
       </div>
+
+      <Modal
+        isOpen={deleteTargetId !== null}
+        onClose={() => setDeleteTargetId(null)}
+        title="정말로 문의를 삭제하시겠습니까?"
+        onConfirm={handleConfirmDelete}
+        confirmText="삭제"
+      />
     </div>
   );
 }

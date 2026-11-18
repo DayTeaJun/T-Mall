@@ -9,6 +9,7 @@ import {
   useUpdateInquiryCommentMutation,
   useDeleteInquiryCommentMutation,
 } from "@/lib/queries/inquiry";
+import Modal from "@/components/common/modal/Modal";
 
 interface CommentSectionProps {
   inquiry: {
@@ -26,6 +27,7 @@ export default function CommentSection({ inquiry }: CommentSectionProps) {
   const [comment, setComment] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState(inquiry.answer_content || "");
+  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
 
   const { mutate: postComment, isPending: isPosting } =
     usePostInquiryCommentMutation();
@@ -67,14 +69,13 @@ export default function CommentSection({ inquiry }: CommentSectionProps) {
   };
 
   const handleDeleteComment = () => {
-    if (confirm("답변을 삭제하시겠습니까?")) {
-      deleteComment(inquiry.id, {
-        onSuccess: () => {
-          setEditContent("");
-          setIsEditing(false);
-        },
-      });
-    }
+    setIsDeleteConfirmOpen(false);
+    deleteComment(inquiry.id, {
+      onSuccess: () => {
+        setEditContent("");
+        setIsEditing(false);
+      },
+    });
   };
 
   return (
@@ -137,7 +138,7 @@ export default function CommentSection({ inquiry }: CommentSectionProps) {
                     </button>
                     <p className="text-gray-200">|</p>
                     <button
-                      onClick={handleDeleteComment}
+                      onClick={() => setIsDeleteConfirmOpen(true)}
                       disabled={isDeleting}
                       className="hover:font-bold hover:text-red-600 disabled:text-gray-300"
                       type="button"
@@ -201,6 +202,14 @@ export default function CommentSection({ inquiry }: CommentSectionProps) {
           </div>
         </div>
       )}
+
+      <Modal
+        isOpen={isDeleteConfirmOpen}
+        onClose={() => setIsDeleteConfirmOpen(false)}
+        title="답변을 삭제하시겠습니까?"
+        onConfirm={handleDeleteComment}
+        confirmText="삭제"
+      />
     </div>
   );
 }

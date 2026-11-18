@@ -16,6 +16,7 @@ import AdminChatRoom from "./AdminChatRoom";
 import { RealtimeChannel } from "@supabase/supabase-js";
 import { useInfiniteAdminChatList } from "@/lib/queries/chat";
 import { queryClient } from "@/components/providers/ReactQueryProvider";
+import Modal from "@/components/common/modal/Modal";
 
 export interface AdminChatListProps {
   id: number;
@@ -41,6 +42,7 @@ export default function AdminChatList() {
     null,
   );
   const [isClosing, setIsClosing] = useState(false);
+  const [isCloseConfirmOpen, setIsCloseConfirmOpen] = useState(false);
 
   const userId = user?.id || "";
 
@@ -172,14 +174,7 @@ export default function AdminChatList() {
       return;
     }
 
-    if (
-      !confirm(
-        "상담을 종료하시겠습니까? (종료된 상담방은 24시간 후 자동으로 완전히 삭제됩니다.)",
-      )
-    ) {
-      return;
-    }
-
+    setIsCloseConfirmOpen(false);
     setIsClosing(true);
 
     try {
@@ -276,7 +271,7 @@ export default function AdminChatList() {
           {isAdmin && (
             <button
               type="button"
-              onClick={() => handleCloseAndDeleteRoom(selectedRoom.id)}
+              onClick={() => setIsCloseConfirmOpen(true)}
               disabled={isClosing}
               className="flex items-center gap-1 text-xs text-red-600 hover:text-red-700 hover:bg-red-50 px-2 py-1.5 rounded transition-colors disabled:opacity-50 cursor-pointer font-medium border border-red-200"
             >
@@ -292,6 +287,15 @@ export default function AdminChatList() {
             roomStatus={selectedRoom.status}
           />
         </div>
+
+        <Modal
+          isOpen={isCloseConfirmOpen}
+          onClose={() => setIsCloseConfirmOpen(false)}
+          title="상담을 종료하시겠습니까?"
+          description="종료된 상담방은 24시간 후 자동으로 완전히 삭제됩니다."
+          onConfirm={() => handleCloseAndDeleteRoom(selectedRoom.id)}
+          confirmText="종료"
+        />
       </div>
     );
   }

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import {
   useDelDeliveryAddressMutation,
   useGetAddressList,
@@ -9,6 +10,7 @@ import { useAuthStore } from "@/lib/store/useAuthStore";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Plus, Trash2, Edit2, MapPin } from "lucide-react";
+import Modal from "@/components/common/modal/Modal";
 
 interface AddrType {
   address: string;
@@ -38,22 +40,29 @@ export default function DeliveryPage() {
     user?.id || "",
   );
 
+  const [deleteTarget, setDeleteTarget] = useState<AddrType | null>(null);
+
   const handleDelete = (addr: AddrType) => {
     if (addr.is_default) {
       toast.error("기본 배송지는 삭제할 수 없습니다.");
       return;
     }
 
-    if (confirm(`'${addr.address_name}' 배송지를 삭제하시겠습니까?`)) {
-      deleteAddress(addr.id, {
-        onSuccess: () => {
-          toast.success("배송지가 삭제되었습니다.");
-        },
-        onError: () => {
-          toast.error("삭제 중 오류가 발생했습니다.");
-        },
-      });
-    }
+    setDeleteTarget(addr);
+  };
+
+  const handleConfirmDelete = () => {
+    if (!deleteTarget) return;
+
+    deleteAddress(deleteTarget.id, {
+      onSuccess: () => {
+        toast.success("배송지가 삭제되었습니다.");
+      },
+      onError: () => {
+        toast.error("삭제 중 오류가 발생했습니다.");
+      },
+    });
+    setDeleteTarget(null);
   };
 
   return (
@@ -275,6 +284,14 @@ export default function DeliveryPage() {
           ))
         )}
       </div>
+
+      <Modal
+        isOpen={!!deleteTarget}
+        onClose={() => setDeleteTarget(null)}
+        title={`'${deleteTarget?.address_name}' 배송지를 삭제하시겠습니까?`}
+        onConfirm={handleConfirmDelete}
+        confirmText="삭제"
+      />
     </section>
   );
 }

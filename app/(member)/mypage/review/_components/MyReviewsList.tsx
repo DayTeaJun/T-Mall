@@ -1,12 +1,13 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useAuthStore } from "@/lib/store/useAuthStore";
 import { Loader2, MessageSquare, Star, Calendar, Package } from "lucide-react";
 import Image from "next/image";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import ReactPaginate from "react-paginate";
 import { useDelReview, useGetReviews } from "@/lib/queries/reviews";
+import Modal from "@/components/common/modal/Modal";
 
 export interface Review {
   id: string;
@@ -39,10 +40,12 @@ export default function MyReviewsList() {
   );
   const { mutate: deleteReview } = useDelReview(user?.id || "");
 
-  const handleDelReview = (reviewId: string) => {
-    if (confirm("정말로 리뷰를 삭제하시겠습니까?")) {
-      deleteReview(reviewId);
-    }
+  const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
+
+  const handleConfirmDelete = () => {
+    if (!deleteTargetId) return;
+    deleteReview(deleteTargetId);
+    setDeleteTargetId(null);
   };
 
   const handlePageChange = (selected: { selected: number }) => {
@@ -130,7 +133,7 @@ export default function MyReviewsList() {
               </button>
               <span className="text-gray-300 hidden sm:inline">|</span>
               <button
-                onClick={() => handleDelReview(review.id)}
+                onClick={() => setDeleteTargetId(review.id)}
                 className="hover:text-red-500 px-2 py-1 border border-gray-300 bg-white rounded-xs"
               >
                 삭제
@@ -187,6 +190,14 @@ export default function MyReviewsList() {
           nextLinkClassName={"page-link"}
         />
       </div>
+
+      <Modal
+        isOpen={deleteTargetId !== null}
+        onClose={() => setDeleteTargetId(null)}
+        title="정말로 리뷰를 삭제하시겠습니까?"
+        onConfirm={handleConfirmDelete}
+        confirmText="삭제"
+      />
     </div>
   );
 }

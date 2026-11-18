@@ -6,6 +6,7 @@ import { createBrowserSupabaseClient } from "@/lib/config/supabase/client";
 import { toast } from "sonner";
 import { queryClient } from "@/components/providers/ReactQueryProvider";
 import InquiryModal from "./InquiryModal";
+import Modal from "@/components/common/modal/Modal";
 
 interface Props {
   productId: string;
@@ -15,15 +16,22 @@ interface Props {
 function InquiryDelBtn({ productId, myInquiryId }: Props) {
   const { user } = useAuthStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
 
-  const handleInquiryClick = async () => {
+  const handleInquiryClick = () => {
     if (!myInquiryId) {
       return toast.error(
         "문의 ID가 존재하지 않습니다. 문의 작성 후 다시 시도해주세요.",
       );
     }
 
-    if (!confirm("작성하신 상품 문의를 삭제하시겠습니까?")) return;
+    setIsDeleteConfirmOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!myInquiryId) return;
+
+    setIsDeleteConfirmOpen(false);
 
     const supabase = createBrowserSupabaseClient();
     const { error } = await supabase
@@ -62,6 +70,14 @@ function InquiryDelBtn({ productId, myInquiryId }: Props) {
           productId={productId}
         />
       )}
+
+      <Modal
+        isOpen={isDeleteConfirmOpen}
+        onClose={() => setIsDeleteConfirmOpen(false)}
+        title="작성하신 상품 문의를 삭제하시겠습니까?"
+        onConfirm={handleConfirmDelete}
+        confirmText="삭제"
+      />
     </>
   );
 }
