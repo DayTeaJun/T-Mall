@@ -4,10 +4,10 @@ import React from "react";
 import SignOutBtn from "../common/buttons/SignOutBtn";
 import { UserType } from "@/types/user";
 import CartLinkBtn from "../common/buttons/CartLinkBtn";
-import SearchInput from "../ui/SearchInput";
-import SearchInput_M from "../ui/SearchInput_M";
-import CategoryDropdown_M from "../ui/CategoryDropdown_M";
-import CategoryDropdown from "../ui/CategoryDropdown";
+import SearchInput from "../common/SearchInput";
+import SearchInput_M from "../common/SearchInput_M";
+import CategoryDropdown_M from "../common/CategoryDropdown_M";
+import CategoryDropdown from "../common/CategoryDropdown";
 import SignInBtn from "../common/buttons/SignInBtn";
 
 async function Header({ user }: { user: UserType | null }) {
