@@ -1,6 +1,6 @@
 "use client";
 
-import DetailImagePreview from "@/components/common/DetailImagePreview";
+import DetailImagePreview from "@/components/common/imagePreviews/DetailImagePreview";
 import { queryClient } from "@/components/providers/ReactQueryProvider";
 import { Button } from "@/components/ui/button";
 import { useDetailImagePreview } from "@/hooks/useImagePreview";

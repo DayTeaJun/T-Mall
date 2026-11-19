@@ -7,7 +7,7 @@ import {
 } from "@/lib/queries/auth";
 import { uploadImageToStorage } from "@/lib/queries/storage";
 import { useAuthStore } from "@/lib/store/useAuthStore";
-import ImagePreviews from "@/components/common/ImagePreview";
+import ImagePreviews from "@/components/common/imagePreviews/ImagePreview";
 import { ImgPreview } from "@/hooks/useImagePreview";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";

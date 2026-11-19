@@ -1,7 +1,7 @@
 "use client";
 
-import ImagePreviews from "@/components/common/ImagePreview";
-import DetailImagePreview from "@/components/common/DetailImagePreview";
+import ImagePreviews from "@/components/common/imagePreviews/ImagePreview";
+import DetailImagePreview from "@/components/common/imagePreviews/DetailImagePreview";
 
 interface Props {
   heading: string;

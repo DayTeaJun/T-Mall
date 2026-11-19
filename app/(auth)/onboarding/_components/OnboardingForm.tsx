@@ -8,7 +8,7 @@ import { uploadImageToStorage } from "@/lib/queries/storage";
 import { User } from "@supabase/supabase-js";
 import { ImgPreview } from "@/hooks/useImagePreview";
 import DaumPostcode from "@/components/common/AddressSearch";
-import ImagePreviews from "@/components/common/ImagePreview";
+import ImagePreviews from "@/components/common/imagePreviews/ImagePreview";
 import PolicyForm from "../../signup/_components/PolicyForm";
 import { useAuthStore } from "@/lib/store/useAuthStore";
 import { toast } from "sonner";
@@ -166,8 +166,8 @@ export default function OnboardingForm({ user }: Props) {
                   hint === "중복된 사용자명입니다."
                     ? "text-red-600"
                     : hint === "사용 가능한 사용자명입니다."
-                    ? "text-green-600"
-                    : "text-gray-500"
+                      ? "text-green-600"
+                      : "text-gray-500"
                 }`}
               >
                 {hint ? hint : "영문/숫자/-/_ 만 허용됩니다."}

@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { useMergedDetailImages } from "@/hooks/useImagePreview";
-import DetailImagePreview from "@/components/common/DetailImagePreview";
+import DetailImagePreview from "@/components/common/imagePreviews/DetailImagePreview";
 import { queryClient } from "@/components/providers/ReactQueryProvider";
 
 function ReviewEditForm({
@@ -87,9 +87,7 @@ function ReviewEditForm({
     let uploadedUrls: string[] = [];
     try {
       uploadedUrls = await Promise.all(
-        detailFiles.map((file) =>
-          uploadImageToStorage("review", userId, file),
-        ),
+        detailFiles.map((file) => uploadImageToStorage("review", userId, file)),
       );
     } catch {
       toast.error("이미지 업로드 실패");
