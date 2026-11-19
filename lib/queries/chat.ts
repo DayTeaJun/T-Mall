@@ -1,7 +1,7 @@
 "use client";
 
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
-import { AdminChatListProps } from "@/components/ToolComponents/chat/admin/AdminChatList";
+import { AdminChatListProps } from "@/components/widgets/chat/admin/AdminChatList";
 import { createBrowserSupabaseClient } from "../config/supabase/client";
 
 interface Message {

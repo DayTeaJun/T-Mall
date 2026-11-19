@@ -2,9 +2,9 @@ import Header from "./Header";
 import Footer from "./Footer";
 import Main from "./Main";
 import { UserType } from "@/types/user";
-import QuickPanel from "../ToolComponents/QuickPanel";
-import MobileBottomTabBar from "../ToolComponents/MobileBottomTabBar";
-import FloatingToolWidget from "../ToolComponents/FloatingToolWidget";
+import QuickPanel from "../widgets/QuickPanel";
+import MobileBottomTabBar from "../widgets/MobileBottomTabBar";
+import FloatingToolWidget from "../widgets/FloatingToolWidget";
 
 interface Props {
   user: UserType | null;
