@@ -6,8 +6,8 @@ import { UserType } from "@/types/user";
 import CartLinkBtn from "../common/buttons/CartLinkBtn";
 import SearchInput from "../common/SearchInput";
 import SearchInput_M from "../common/SearchInput_M";
-import CategoryDropdown_M from "../common/CategoryDropdown_M";
-import CategoryDropdown from "../common/CategoryDropdown";
+import CategoryDropdown_M from "../common/categoryDropdown/CategoryDropdown_M";
+import CategoryDropdown from "../common/categoryDropdown/CategoryDropdown";
 import SignInBtn from "../common/buttons/SignInBtn";
 
 async function Header({ user }: { user: UserType | null }) {
