@@ -12,7 +12,7 @@ import { toast } from "sonner";
 import { useGetProductDetail } from "@/lib/queries/products";
 import { useGetDefaultAddress } from "@/lib/queries/delivery";
 import { useGetMyAvailableCoupons } from "@/lib/queries/coupon";
-import AddressListModal from "@/components/common/modal/delivery/AddressModal";
+import AddressListModal from "@/components/common/modal/delivery/AddressListModal";
 
 const clientKey = process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY!;
 

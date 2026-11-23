@@ -9,7 +9,7 @@ import Modal from "@/components/common/modal/Modal";
 import { LoaderCircle } from "lucide-react";
 import Image from "next/image";
 import { toast } from "sonner";
-import AddressListModal from "@/components/common/modal/delivery/AddressModal";
+import AddressListModal from "@/components/common/modal/delivery/AddressListModal";
 import { useGetDefaultAddress } from "@/lib/queries/delivery";
 import { useGetMyCoupon } from "@/lib/queries/coupon";
 
