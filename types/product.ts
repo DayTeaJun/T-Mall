@@ -117,7 +117,17 @@ export interface CheckoutItem {
   options?: ItemOptions;
 }
 
-export interface OrderItem {
-  price: number | null;
-  quantity: number | null;
+export interface OrderListProduct {
+  name: string;
+  image_url: string | null;
+}
+
+export interface OrderListItem {
+  id: string;
+  product_id: string;
+  quantity: number;
+  price: number;
+  size: string | null;
+  delivery_status: string | null;
+  products: OrderListProduct | null;
 }

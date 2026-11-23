@@ -6,21 +6,7 @@ import { Package, Loader2, ChevronRight } from "lucide-react";
 import ReactPaginate from "react-paginate";
 import { useGetOrders } from "@/lib/queries/orders";
 import { useRouter } from "next/navigation";
-
-interface Product {
-  name: string;
-  image_url: string | null;
-}
-
-interface OrderItem {
-  id: string;
-  product_id: string;
-  quantity: number;
-  price: number;
-  size: string | null;
-  delivery_status: string | null;
-  products: Product | null;
-}
+import { OrderListItem } from "@/types/product";
 
 interface OrderData {
   id: string;
@@ -28,7 +14,7 @@ interface OrderData {
   user_id: string;
   user_name: string | null;
   email: string | null;
-  order_items: OrderItem[];
+  order_items: OrderListItem[];
 }
 
 interface UserOrderListsProps {
@@ -117,7 +103,7 @@ function UserOrderLists({ userId }: UserOrderListsProps) {
                       const firstItem = order.order_items?.[0];
                       const itemCount = order.order_items?.length || 0;
                       const totalPrice = order.order_items?.reduce(
-                        (acc: number, item: OrderItem) =>
+                        (acc: number, item: OrderListItem) =>
                           acc + item.price * item.quantity,
                         0,
                       );
@@ -193,7 +179,7 @@ function UserOrderLists({ userId }: UserOrderListsProps) {
                   const firstItem = order.order_items?.[0];
                   const itemCount = order.order_items?.length || 0;
                   const totalPrice = order.order_items?.reduce(
-                    (acc: number, item: OrderItem) =>
+                    (acc: number, item: OrderListItem) =>
                       acc + item.price * item.quantity,
                     0,
                   );

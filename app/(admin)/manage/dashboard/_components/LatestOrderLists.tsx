@@ -5,20 +5,7 @@ import { useAuthStore } from "@/lib/store/useAuthStore";
 import { ArrowRight, Loader2, Package, PackageX } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-
-interface Product {
-  name: string;
-  image_url: string | null;
-}
-interface OrderItem {
-  id: string;
-  product_id: string;
-  quantity: number;
-  price: number;
-  size: string | null;
-  delivery_status: string | null;
-  products: Product | null;
-}
+import { OrderListItem } from "@/types/product";
 
 function LatestOrderLists() {
   const router = useRouter();
@@ -82,7 +69,7 @@ function LatestOrderLists() {
               const firstItem = order.order_items?.[0];
               const itemCount = order.order_items?.length || 0;
               const totalPrice = order.order_items?.reduce(
-                (acc: number, item: OrderItem) =>
+                (acc: number, item: OrderListItem) =>
                   acc + item.price * item.quantity,
                 0,
               );
@@ -195,7 +182,7 @@ function LatestOrderLists() {
                 const firstItem = order.order_items?.[0];
                 const itemCount = order.order_items?.length || 0;
                 const totalPrice = order.order_items?.reduce(
-                  (acc: number, item: OrderItem) =>
+                  (acc: number, item: OrderListItem) =>
                     acc + item.price * item.quantity,
                   0,
                 );
