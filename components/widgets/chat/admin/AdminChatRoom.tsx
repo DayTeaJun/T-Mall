@@ -5,20 +5,15 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { createBrowserSupabaseClient } from "@/lib/config/supabase/client";
 import { useAuthStore } from "@/lib/store/useAuthStore";
 import { toast } from "sonner";
-import { CHAT_MESSAGES_PAGE_SIZE, useAdminChatMsg } from "@/lib/queries/chat";
+import {
+  CHAT_MESSAGES_PAGE_SIZE,
+  MessageType,
+  useAdminChatMsg,
+} from "@/lib/queries/chat";
 import { queryClient } from "@/components/providers/ReactQueryProvider";
 
-interface Message {
-  id: number;
-  room_id: number;
-  sender_id: string;
-  content: string;
-  created_at: string;
-  is_admin: boolean;
-}
-
 interface ChatData {
-  messages: Message[];
+  messages: MessageType[];
   hasMore: boolean;
 }
 
@@ -102,7 +97,7 @@ export default function AdminChatRoom({
           filter: `room_id=eq.${roomId}`,
         },
         (payload) => {
-          const newMsg = payload.new as Message;
+          const newMsg = payload.new as MessageType;
           // React Query 캐시를 직접 업데이트하여 실시간 반영
           // (limit이 쿼리키에 포함돼 있어, 현재 활성화된 limit 값과 무관하게
           // "adminChat"로 시작하는 캐시 전부에 반영되도록 setQueriesData 사용)
@@ -110,7 +105,7 @@ export default function AdminChatRoom({
             { queryKey: ["adminChat", roomId] },
             (oldData: ChatData) => {
               if (!oldData) return oldData;
-              if (oldData.messages.some((m: Message) => m.id === newMsg.id))
+              if (oldData.messages.some((m: MessageType) => m.id === newMsg.id))
                 return oldData;
               return {
                 ...oldData,

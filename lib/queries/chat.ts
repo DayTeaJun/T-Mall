@@ -4,7 +4,7 @@ import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { AdminChatListProps } from "@/components/widgets/chat/admin/AdminChatList";
 import { createBrowserSupabaseClient } from "../config/supabase/client";
 
-interface Message {
+export interface MessageType {
   id: number;
   room_id: number;
   sender_id: string;
@@ -29,7 +29,7 @@ async function fetchRoomMessages(roomId: number, limit: number) {
 
   if (error) throw new Error(error.message);
 
-  const sortedMessages = ((data as Message[]) || []).reverse();
+  const sortedMessages = ((data as MessageType[]) || []).reverse();
 
   return {
     messages: sortedMessages,
