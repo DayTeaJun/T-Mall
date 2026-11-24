@@ -4,23 +4,14 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Lock } from "lucide-react";
 import { toast } from "sonner";
+import {
+  InquiryListItem,
+  unlockInquirySecret,
+} from "@/lib/queries/inquiry";
 import { useInquiryStore } from "@/lib/store/useInquiryStore";
-import { unlockInquirySecret } from "@/lib/queries/inquiry";
-
-interface InquiryType {
-  id: number;
-  inquiry_type: string;
-  title: string;
-  guest_name: string | null;
-  status: string | null;
-  is_public: boolean | null;
-  is_locked: boolean;
-  is_guest_post: boolean;
-  user_id: string | null;
-}
 
 interface InquiryRowProps {
-  inquiry: InquiryType;
+  inquiry: InquiryListItem;
   displayIndex: number;
   inquiryTypeLabel: string;
   isMobileContainer?: boolean;

@@ -19,7 +19,7 @@ import { useDetailImagePreview } from "@/hooks/useImagePreview";
 import { toast } from "sonner";
 import DetailImagePreview from "./_components/DetailImagePreview";
 
-interface InquiryType {
+interface InquiryFormData {
   content: string;
   email: string | null;
   guest_name: string | null;
@@ -56,7 +56,7 @@ export default function DeliveryRegisterPage() {
     return `${value.slice(0, 3)}-${value.slice(3, 7)}-${value.slice(7)}`;
   };
 
-  const [formData, setFormData] = useState<InquiryType>({
+  const [formData, setFormData] = useState<InquiryFormData>({
     title: "",
     content: "",
     email: user?.email || "",

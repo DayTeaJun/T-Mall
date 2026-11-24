@@ -92,6 +92,20 @@ export function useDelProductInquiry(userId: string) {
   });
 }
 
+// 문의 목록(list_inquiries RPC) 행 하나의 모양
+export interface InquiryListItem {
+  created_at: string | null;
+  guest_name: string | null;
+  id: number;
+  inquiry_type: string;
+  is_guest_post: boolean;
+  is_locked: boolean;
+  is_public: boolean | null;
+  status: string | null;
+  title: string;
+  user_id: string | null;
+}
+
 export interface InquiryPostType {
   title: string;
   content: string;

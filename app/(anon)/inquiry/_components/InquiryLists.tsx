@@ -4,19 +4,7 @@ import Pagination from "./Pagination";
 import SearchInput from "./SearchInput";
 import InquiryRow from "./InquiryRow";
 import Createbtn from "./Createbtn";
-
-interface InquiryType {
-  created_at: string | null;
-  guest_name: string | null;
-  id: number;
-  inquiry_type: string;
-  is_guest_post: boolean;
-  is_locked: boolean;
-  is_public: boolean | null;
-  status: string | null;
-  title: string;
-  user_id: string | null;
-}
+import { InquiryListItem } from "@/lib/queries/inquiry";
 
 const INQUIRY_TYPE_MAP: Record<string, string> = {
   DELIVERY: "배송",
@@ -80,7 +68,7 @@ async function InquiryLists({
         </thead>
         <tbody className="text-sm">
           {inqueries?.length !== 0 &&
-            inqueries?.map((inquiry: InquiryType, index: number) => {
+            inqueries?.map((inquiry: InquiryListItem, index: number) => {
               const inquiryTypeLabel =
                 INQUIRY_TYPE_MAP[inquiry.inquiry_type] || inquiry.inquiry_type;
               const displayIndex = (count || 0) - (page - 1) * LIMIT - index;
@@ -109,7 +97,7 @@ async function InquiryLists({
 
       <div className="block sm:hidden border-t border-gray-400 divide-y divide-gray-100 text-sm">
         {inqueries?.length !== 0
-          ? inqueries?.map((inquiry: InquiryType, index: number) => {
+          ? inqueries?.map((inquiry: InquiryListItem, index: number) => {
               const inquiryTypeLabel =
                 INQUIRY_TYPE_MAP[inquiry.inquiry_type] || inquiry.inquiry_type;
               const displayIndex = (count || 0) - (page - 1) * LIMIT - index;
