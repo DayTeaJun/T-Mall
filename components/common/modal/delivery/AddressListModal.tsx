@@ -6,20 +6,9 @@ import {
 } from "@/lib/queries/delivery";
 import EditDeliveryForm from "./EditDeliveryForm";
 import RegistDeliveryForm from "./RegistDeliveryForm";
+import { Tables } from "@/lib/config/supabase/types_db";
 
-export interface DeliveryAddress {
-  id: string;
-  address: string;
-  address_name: string;
-  delivery_instruction: string | null;
-  detail_address: string | null;
-  is_default: boolean | null;
-  postal_code: string;
-  receiver_name: string;
-  receiver_phone: string;
-  user_id: string | null;
-  created_at: string | null;
-}
+export type DeliveryAddress = Tables<"delivery_addresses">;
 
 interface Props {
   userId?: string;

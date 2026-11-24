@@ -6,7 +6,7 @@ import {
 } from "@/lib/config/supabase/server/server";
 import { SignUpFormData, UserProfileType } from "@/types/user";
 import { extractFilePathFromUrl } from "../utils/supabaseStorageUtils";
-import { Database } from "../config/supabase/types_db";
+import { TablesInsert } from "../config/supabase/types_db";
 import { DeliveryAddressForm } from "@/types/delivery";
 
 // 회원가입
@@ -50,7 +50,7 @@ export async function signUpUser(formData: SignUpFormData) {
 // 소셜 로그인 (회원가입)
 export async function signUpOAuth(formData: SignUpFormData) {
   const supabase = await createActionSupabaseClient();
-  type UserInsert = Database["public"]["Tables"]["user_table"]["Insert"];
+  type UserInsert = TablesInsert<"user_table">;
 
   if (!formData.id) {
     throw new Error("OAuth 회원가입에는 ID가 필요합니다.");

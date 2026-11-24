@@ -11,20 +11,9 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Plus, Trash2, Edit2, MapPin } from "lucide-react";
 import Modal from "@/components/common/modal/Modal";
+import { Tables } from "@/lib/config/supabase/types_db";
 
-interface AddrType {
-  address: string;
-  address_name: string;
-  created_at: string | null;
-  delivery_instruction: string | null;
-  detail_address: string | null;
-  id: string;
-  is_default: boolean | null;
-  postal_code: string;
-  receiver_name: string;
-  receiver_phone: string;
-  user_id: string | null;
-}
+type AddrType = Tables<"delivery_addresses">;
 
 export default function DeliveryPage() {
   const router = useRouter();
