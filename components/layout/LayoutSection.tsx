@@ -4,7 +4,7 @@ import Main from "./Main";
 import { UserType } from "@/types/user";
 import QuickPanel from "../widgets/QuickPanel";
 import MobileBottomTabBar from "../widgets/MobileBottomTabBar";
-import FloatingToolWidget from "../widgets/FloatingToolWidget";
+import FloatingButtons from "../widgets/floatingButtons/FloatingButtons";
 
 interface Props {
   user: UserType | null;
@@ -21,7 +21,7 @@ function LayoutSection({ children, user }: Props) {
 
       <QuickPanel />
       <MobileBottomTabBar />
-      <FloatingToolWidget />
+      <FloatingButtons />
     </>
   );
 }

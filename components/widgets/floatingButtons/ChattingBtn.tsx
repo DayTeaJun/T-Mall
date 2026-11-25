@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { MessageCircle } from "lucide-react";
 import { useChatUnread } from "@/hooks/useChatUnread";
-import ChattingModal from "./chat/ChattingModal";
+import ChattingModal from "../chat/ChattingModal";
 
 function ChattingBtn({ compact = false }: { compact?: boolean }) {
   const [isChatting, setIsChatting] = useState(false);

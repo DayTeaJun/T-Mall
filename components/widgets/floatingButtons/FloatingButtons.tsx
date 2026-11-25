@@ -4,7 +4,7 @@ import { useAuthStore } from "@/lib/store/useAuthStore";
 import ChattingBtn from "./ChattingBtn";
 import TopBtn from "./TopBtn";
 
-function FloatingToolWidget() {
+function FloatingButtons() {
   const { user } = useAuthStore();
 
   return (
@@ -15,4 +15,4 @@ function FloatingToolWidget() {
   );
 }
 
-export default FloatingToolWidget;
+export default FloatingButtons;
