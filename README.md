@@ -27,7 +27,7 @@
 | Styling | ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS_4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white) ![shadcn/ui](https://img.shields.io/badge/shadcn%2Fui-000000?style=for-the-badge&logo=shadcnui&logoColor=white) |
 | 상태/데이터 | ![TanStack Query](https://img.shields.io/badge/TanStack_Query-FF4154?style=for-the-badge&logo=reactquery&logoColor=white) ![Zustand](https://img.shields.io/badge/Zustand-433E38?style=for-the-badge) |
 | Backend/DB | ![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white) ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white) |
-| 결제 | ![TossPayments](https://img.shields.io/badge/Toss_Payments-0064FF?style=for-the-badge&logo=toss&logoColor=white) |
+| Open API | ![TossPayments](https://img.shields.io/badge/Toss_Payments-0064FF?style=for-the-badge&logo=toss&logoColor=white) ![DaumPostcode](https://img.shields.io/badge/Daum_Postcode-FFCD00?style=for-the-badge) |
 | 기타 | ![Chart.js](https://img.shields.io/badge/Chart.js-FF6384?style=for-the-badge&logo=chart.js&logoColor=white) ![Vercel](https://img.shields.io/badge/Vercel-black?style=for-the-badge&logo=vercel&logoColor=white) |
 
 <br>
@@ -56,6 +56,17 @@ graph TD
   MEMBER --> ST["Supabase Storage<br/>상품/프로필/리뷰 이미지"]
   ADMIN --> ST
 ```
+
+`middleware.ts`는 요청마다 아래 순서로 검사해 리다이렉트 여부를 결정합니다.
+
+1. 비로그인 + 로그인 필요 경로(`/mypage`, `/manage`, `/direct-checkout` 등) 접근 → `/signin`
+2. 로그인했지만 닉네임 미설정(소셜 로그인 최초 가입) → `/onboarding`
+3. 로그인 상태에서 `/signin`, `/signup` 접근 → 홈으로 리다이렉트
+4. 정지된 계정 → `/restricted`
+5. `level < 2`가 `/manage` 이하 접근 → 차단
+6. `level !== 3`이 `/manage/user`(회원 관리) 접근 → 차단
+
+`level 2(판매자)`와 `level 3(관리자)`은 같은 `/manage` 레이아웃을 쓰지만 조회 범위가 다릅니다 — 판매자는 본인이 등록한 상품/주문만 보이고, 관리자는 전체 데이터에 더해 회원 관리와 전체 채팅 상담 기능까지 추가로 접근할 수 있습니다.
 
 <br>
 
@@ -95,12 +106,14 @@ graph TD
 
 ### 🛠 관리자 대시보드
 
-판매자/관리자는 별도의 관리자 레이아웃(`/manage`)에서 아래 기능을 이용할 수 있습니다.
+판매자(level 2)와 관리자(level 3)는 별도의 관리자 레이아웃(`/manage`)에서 아래 기능을 이용할 수 있습니다. 공통 기능은 **본인이 등록한 상품/주문** 범위로 조회 범위가 제한되고, 관리자는 전체 데이터와 추가 기능에 접근할 수 있습니다.
 
-- **대시보드**: Chart.js 기반 매출 현황, 카테고리별 판매 비중, 최근 주문 목록
+- **대시보드**: Chart.js 기반 매출 현황, 카테고리별 판매 비중, 최근 주문 목록(신규 가입자 수는 관리자에게만 노출)
 - **상품 관리**: 상품 등록/수정/삭제, 다중 이미지 업로드
-- **주문 관리**: 전체 주문 목록 및 상세 조회
-- **회원 관리**: 회원 목록/상세 조회, 계정 상태(정지 등) 관리
+- **주문 관리**: 주문 목록/상세 조회, 배송 상태 변경
+- **상품 문의 답변**: 본인이 등록한 상품에 달린 문의에만 답변 작성/수정 가능(본인이 작성한 문의에는 답변 불가)
+- **회원 관리** (관리자 전용): 회원 목록/상세 조회, 계정 상태(정지 등) 관리
+- **실시간 채팅 상담** (관리자 전용): 고객별 채팅방 목록에서 안 읽은 메시지 확인 및 응대
 
 <br>
 
@@ -109,32 +122,32 @@ graph TD
 ```
 T-Mall
 ├─ app
-│  ├─ (admin)              # 관리자 전용 (level 3)
+│  ├─ (admin)              # 판매자 이상 전용 (level 2+)
 │  │  └─ manage
-│  │     ├─ dashBoard      # 매출/카테고리 통계, 최근 주문
-│  │     ├─ productList    # 상품 목록/삭제
+│  │     ├─ dashboard      # 매출/카테고리 통계, 최근 주문
+│  │     ├─ product-list   # 상품 목록/삭제
 │  │     ├─ regist         # 상품 등록
 │  │     ├─ edit/[id]      # 상품 수정
-│  │     ├─ orderList      # 주문 목록/상세
-│  │     └─ user           # 회원 목록/상세
+│  │     ├─ order-list     # 주문 목록/상세
+│  │     └─ user           # 회원 목록/상세 (관리자 전용)
 │  ├─ (anon)                # 비로그인 이용 가능
 │  │  ├─ category
 │  │  ├─ search
 │  │  ├─ events
 │  │  ├─ inquiry           # 고객센터 문의 게시판
-│  │  ├─ policy            # 이용약관/개인정보처리방침
-│  │  └─ products/[id]     # 상품 상세
+│  │  ├─ policy             # 이용약관/개인정보처리방침
+│  │  └─ products/[id]      # 상품 상세
 │  ├─ (auth)                # 로그인/회원가입
 │  │  ├─ signin / signup
 │  │  ├─ find-id / find-password / reset-password
 │  │  └─ onboarding
 │  ├─ (member)               # 로그인 필요
 │  │  ├─ mypage
-│  │  │  ├─ myCart / orderList / delivery
+│  │  │  ├─ my-cart / order-list / delivery
 │  │  │  ├─ coupon / bookmark / review / inquiry
 │  │  │  └─ profile
-│  │  ├─ productReview/[id]  # 리뷰 작성/수정
-│  │  ├─ directCheckout      # 바로결제
+│  │  ├─ product-review/[id] # 리뷰 작성/수정
+│  │  ├─ direct-checkout     # 바로결제
 │  │  └─ restricted          # 정지 계정 안내
 │  └─ api
 │     ├─ auth                # OAuth 콜백, 아이디 찾기, 중복확인
@@ -143,12 +156,13 @@ T-Mall
 │  ├─ common                 # 주소검색, 버튼, 모달, 상품 카드 등 공용 컴포넌트
 │  ├─ layout                 # Header/Footer/Main
 │  ├─ providers               # AuthProvider, ReactQueryProvider
-│  └─ ui                      # shadcn 기반 UI + 채팅/툴 컴포넌트
+│  ├─ widgets                 # 실시간 채팅, 플로팅 버튼 등
+│  └─ ui                      # shadcn 기반 공용 UI 프리미티브
 ├─ hooks                      # useDebounce, useImagePreview 등
 ├─ lib
-│  ├─ actions                # Server Actions (admin/auth)
+│  ├─ actions                # Server Actions (admin/auth/checkout)
 │  ├─ config/supabase         # 클라이언트/서버/미들웨어용 Supabase 설정
-│  ├─ queries                 # 도메인별 API 함수 (admin/auth/products/storage)
+│  ├─ queries                 # 도메인별 API 함수 (admin/auth/products/storage/reviews/chat/inquiry/coupon/delivery/orders)
 │  ├─ store                   # Zustand 스토어
 │  └─ utils                   # 이미지 압축 등 순수 유틸 함수
 ├─ middleware.ts               # 인증/권한 기반 라우트 제어
