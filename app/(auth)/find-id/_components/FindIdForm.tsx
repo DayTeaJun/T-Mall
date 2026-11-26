@@ -57,7 +57,7 @@ function FindIdForm() {
 
   if (step === "success" && foundId) {
     return (
-      <div className="flex flex-col items-center px-4 max-w-[500px] w-full text-center -mt-20">
+      <div className="flex flex-col items-center px-4 max-w-[500px] w-full text-center">
         <div className="flex items-center justify-center w-16 h-16 rounded-full bg-green-50 mb-5">
           <Check size={32} className="text-green-600" />
         </div>
@@ -105,7 +105,7 @@ function FindIdForm() {
 
   return (
     <>
-      <p className="text-[32px] font-bold -mt-40">Find your ID</p>
+      <p className="text-[32px] font-bold">Find your ID</p>
 
       <p className="text-[13px] text-gray-500">
         사용자명과 휴대폰 번호를 입력해주세요.

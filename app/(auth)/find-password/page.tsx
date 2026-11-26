@@ -3,7 +3,7 @@ import FindPasswordForm from "./_components/FindPasswordForm";
 function FindPasswordPage() {
   return (
     <>
-      <p className="text-[32px] font-bold -mt-40">Reset your password</p>
+      <p className="text-[32px] font-bold">Reset your password</p>
 
       <FindPasswordForm />
     </>
