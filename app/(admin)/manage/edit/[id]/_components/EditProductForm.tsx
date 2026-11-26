@@ -50,26 +50,10 @@ export default function EditProductForm({
   const sizeOptionsMap = SIZE_OPTIONS_MAP;
 
   const {
-    name,
-    setName,
-    description,
-    setDescription,
-    price,
-    setPrice,
-    discountType,
-    setDiscountType,
-    discountValue,
-    setDiscountValue,
-    tags,
-    setTags,
+    fields,
+    onChange,
     category,
     handleCategoryClick,
-    subcategory,
-    setSubcategory,
-    gender,
-    setGender,
-    color,
-    setColor,
     selectedSizes,
     handleSizeToggle,
     stockBySize,
@@ -77,6 +61,17 @@ export default function EditProductForm({
     singleStock,
     setSingleStock,
   } = useProductFormFields(product);
+  const {
+    name,
+    description,
+    price,
+    discountType,
+    discountValue,
+    tags,
+    subcategory,
+    gender,
+    color,
+  } = fields;
 
   const [mainImage, setMainImage] = useState(product.image_url || "");
 
@@ -125,25 +120,57 @@ export default function EditProductForm({
     const hasMainImage = !!(imgUrl || mainImage);
     const hasDetailImages =
       existingDetailImages.length > 0 || detailFiles.length > 0;
+    const rawPrice = Number(price);
 
-    if (
-      !name ||
-      !description ||
-      !user ||
-      !category ||
-      !subcategory ||
-      !gender ||
-      !color ||
-      !price ||
-      !hasMainImage ||
-      !hasDetailImages ||
-      (currentHasSizes ? selectedSizes.length === 0 : singleStock <= 0)
-    ) {
-      toast.info("필수 항목 및 정가를 모두 입력해 주세요.");
+    if (!user) {
+      toast.info("로그인 정보를 확인할 수 없습니다.");
+      return;
+    }
+    if (!name) {
+      toast.info("상품 이름을 입력해 주세요.");
+      return;
+    }
+    if (!description) {
+      toast.info("상세 설명을 입력해 주세요.");
+      return;
+    }
+    if (!price || Number.isNaN(rawPrice) || rawPrice <= 0) {
+      toast.info("정가를 올바르게 입력해 주세요.");
+      return;
+    }
+    if (!category) {
+      toast.info("카테고리를 선택해 주세요.");
+      return;
+    }
+    if (!subcategory) {
+      toast.info("하위 카테고리를 선택해 주세요.");
+      return;
+    }
+    if (!gender) {
+      toast.info("성별을 선택해 주세요.");
+      return;
+    }
+    if (!color) {
+      toast.info("색상을 입력해 주세요.");
+      return;
+    }
+    if (currentHasSizes ? selectedSizes.length === 0 : singleStock <= 0) {
+      toast.info(
+        currentHasSizes
+          ? "사이즈를 1개 이상 선택해 주세요."
+          : "재고 수량을 입력해 주세요.",
+      );
+      return;
+    }
+    if (!hasMainImage) {
+      toast.info("대표 이미지를 등록해 주세요.");
+      return;
+    }
+    if (!hasDetailImages) {
+      toast.info("상세 이미지를 1장 이상 등록해 주세요.");
       return;
     }
 
-    const rawPrice = Number(price);
     let finalSalePrice = rawPrice;
     let originalPriceForDb: number | null = null;
     let finalDiscountType: string | null = null;
@@ -235,25 +262,25 @@ export default function EditProductForm({
         basicInfoHeading="기본 정보 수정"
         imageSectionHeading="상품 이미지 관리"
         name={name}
-        onNameChange={setName}
+        onNameChange={(value) => onChange("name", value)}
         price={price}
-        onPriceChange={setPrice}
+        onPriceChange={(value) => onChange("price", value)}
         discountType={discountType}
-        onDiscountTypeChange={setDiscountType}
+        onDiscountTypeChange={(value) => onChange("discountType", value)}
         discountValue={discountValue}
-        onDiscountValueChange={setDiscountValue}
+        onDiscountValueChange={(value) => onChange("discountValue", value)}
         category={category}
         onCategoryClick={handleCategoryClick}
         subcategory={subcategory}
-        onSubcategoryChange={setSubcategory}
+        onSubcategoryChange={(value) => onChange("subcategory", value)}
         gender={gender}
-        onGenderChange={setGender}
+        onGenderChange={(value) => onChange("gender", value)}
         color={color}
-        onColorChange={setColor}
+        onColorChange={(value) => onChange("color", value)}
         tags={tags}
-        onTagsChange={setTags}
+        onTagsChange={(value) => onChange("tags", value)}
         description={description}
-        onDescriptionChange={setDescription}
+        onDescriptionChange={(value) => onChange("description", value)}
         selectedSizes={selectedSizes}
         onSizeToggle={handleSizeToggle}
         stockBySize={stockBySize}

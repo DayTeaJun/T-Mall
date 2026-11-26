@@ -21,35 +21,42 @@ interface InitialProduct {
   total_stock: number | null;
 }
 
-export function useProductFormFields(initialProduct?: InitialProduct) {
-  const [name, setName] = useState(initialProduct?.name ?? "");
-  const [description, setDescription] = useState(
-    initialProduct?.description ?? "",
-  );
+interface Fields {
+  name: string;
+  description: string;
+  price: string;
+  discountType: "" | "percentage" | "fixed";
+  discountValue: string;
+  tags: string;
+  subcategory: string;
+  gender: string;
+  color: string;
+}
 
-  const [price, setPrice] = useState(
-    initialProduct
+export function useProductFormFields(initialProduct?: InitialProduct) {
+  const [fields, setFields] = useState<Fields>({
+    name: initialProduct?.name ?? "",
+    description: initialProduct?.description ?? "",
+    price: initialProduct
       ? String(initialProduct.original_price ?? initialProduct.price)
       : "",
-  );
+    discountType:
+      (initialProduct?.discount_type as "" | "percentage" | "fixed") || "",
+    discountValue:
+      initialProduct?.discount_value != null
+        ? String(initialProduct.discount_value)
+        : "",
+    tags: (initialProduct?.tags ?? []).join(", "),
+    subcategory: initialProduct?.subcategory ?? "",
+    gender: initialProduct?.gender ?? "",
+    color: initialProduct?.color ?? "",
+  });
 
-  const [discountType, setDiscountType] = useState<
-    "" | "percentage" | "fixed"
-  >((initialProduct?.discount_type as "" | "percentage" | "fixed") || "");
+  const onChange = <K extends keyof Fields>(field: K, value: Fields[K]) => {
+    setFields((prev) => ({ ...prev, [field]: value }));
+  };
 
-  const [discountValue, setDiscountValue] = useState(
-    initialProduct?.discount_value != null
-      ? String(initialProduct.discount_value)
-      : "",
-  );
-
-  const [tags, setTags] = useState((initialProduct?.tags ?? []).join(", "));
   const [category, setCategory] = useState(initialProduct?.category ?? "");
-  const [subcategory, setSubcategory] = useState(
-    initialProduct?.subcategory ?? "",
-  );
-  const [gender, setGender] = useState(initialProduct?.gender ?? "");
-  const [color, setColor] = useState(initialProduct?.color ?? "");
 
   const initialStock =
     (initialProduct?.stock_by_size as Record<string, number>) || {};
@@ -71,7 +78,7 @@ export function useProductFormFields(initialProduct?: InitialProduct) {
 
   const handleCategoryClick = (newCategory: string) => {
     setCategory(newCategory);
-    setSubcategory("");
+    setFields((prev) => ({ ...prev, subcategory: "" }));
     setSelectedSizes([]);
     setStockBySize({});
     setSingleStock(0);
@@ -94,26 +101,10 @@ export function useProductFormFields(initialProduct?: InitialProduct) {
   };
 
   return {
-    name,
-    setName,
-    description,
-    setDescription,
-    price,
-    setPrice,
-    discountType,
-    setDiscountType,
-    discountValue,
-    setDiscountValue,
-    tags,
-    setTags,
+    fields,
+    onChange,
     category,
     handleCategoryClick,
-    subcategory,
-    setSubcategory,
-    gender,
-    setGender,
-    color,
-    setColor,
     selectedSizes,
     handleSizeToggle,
     stockBySize,
