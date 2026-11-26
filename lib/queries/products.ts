@@ -379,6 +379,7 @@ const INQUIRY_SELECT = `
   content,
   answer_content,
   answered_at,
+  updated_at,
   admin_id
 `;
 
@@ -390,6 +391,7 @@ export interface ProductInquiryRow {
   content: string;
   answer_content: string | null;
   answered_at: string | null;
+  updated_at: string | null;
   admin_id: string | null;
 }
 

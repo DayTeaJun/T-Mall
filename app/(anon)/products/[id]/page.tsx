@@ -86,6 +86,7 @@ const getCachedProductDetail = unstable_cache(
         content,
         answer_content,
         answered_at,
+        updated_at,
         admin_id
       `,
         { count: "exact" },

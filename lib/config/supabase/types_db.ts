@@ -518,7 +518,7 @@ export type Database = {
           created_at: string
           id: number
           product_id: string
-          updated_at: string
+          updated_at: string | null
           user_id: string
           user_name: string
         }
@@ -530,7 +530,7 @@ export type Database = {
           created_at?: string
           id?: number
           product_id: string
-          updated_at?: string
+          updated_at?: string | null
           user_id: string
           user_name: string
         }
@@ -542,7 +542,7 @@ export type Database = {
           created_at?: string
           id?: number
           product_id?: string
-          updated_at?: string
+          updated_at?: string | null
           user_id?: string
           user_name?: string
         }

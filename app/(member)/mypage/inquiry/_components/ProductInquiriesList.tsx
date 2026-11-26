@@ -28,7 +28,7 @@ export interface ProductInquiry {
   answer_content: string | null;
   answered_at: string | null;
   created_at: string;
-  updated_at: string;
+  updated_at: string | null;
 
   product_image?: string | null;
   product_name?: string | null;

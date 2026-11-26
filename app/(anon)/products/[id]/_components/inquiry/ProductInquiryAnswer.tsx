@@ -10,18 +10,45 @@ import { queryClient } from "@/components/providers/ReactQueryProvider";
 interface Props {
   productId: string;
   sellerId: string | null;
+  authorId: string;
   inquiry_id: number;
   answer_content: string | null;
   answered_at: string | null;
+  updated_at: string | null;
 }
+
+const formatDate = (dateString: string) => {
+  const date = new Date(dateString);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  return `${year}/${month}/${day} ${hours}:${minutes}`;
+};
 
 function ProductInquiryAnswer(inquiry: Props) {
   const { user } = useAuthStore();
   const isAdmin = user?.level === 3;
   const isSeller = !!user?.id && user.id === inquiry.sellerId;
-  const canAnswer = isAdmin || isSeller;
+  const isOwnQuestion = !!user?.id && user.id === inquiry.authorId;
+  const canAnswer = (isAdmin || isSeller) && !isOwnQuestion;
 
+  const [isEditing, setIsEditing] = useState(false);
   const [content, setContent] = useState("");
+
+  const isFirstAnswer = !inquiry.answer_content;
+  const showForm = isEditing || isFirstAnswer;
+
+  const startEdit = () => {
+    setContent(inquiry.answer_content ?? "");
+    setIsEditing(true);
+  };
+
+  const cancelEdit = () => {
+    setContent("");
+    setIsEditing(false);
+  };
 
   const handleSendcontent = async () => {
     if (!content.trim()) {
@@ -38,6 +65,7 @@ function ProductInquiryAnswer(inquiry: Props) {
     }
 
     const supabase = createBrowserSupabaseClient();
+    const now = new Date().toISOString();
 
     try {
       const { error } = await supabase
@@ -45,14 +73,21 @@ function ProductInquiryAnswer(inquiry: Props) {
         .update({
           admin_id: user.id,
           answer_content: content,
-          answered_at: new Date().toISOString(),
+          // 최초 답변 시각(answered_at)은 그대로 두고, 수정일 때만 updated_at을 기록
+          // (reviews.updated_at과 같은 규칙: 수정 전엔 null, 수정해야만 값이 들어감)
+          ...(isFirstAnswer ? { answered_at: now } : { updated_at: now }),
         })
         .eq("id", inquiry.inquiry_id);
 
       if (error) throw error;
 
-      toast.success("답변이 정상적으로 등록되었습니다.");
+      toast.success(
+        isFirstAnswer
+          ? "답변이 정상적으로 등록되었습니다."
+          : "답변이 수정되었습니다.",
+      );
       setContent("");
+      setIsEditing(false);
       queryClient.invalidateQueries({
         queryKey: ["productInquiryList", inquiry.productId],
       });
@@ -65,7 +100,7 @@ function ProductInquiryAnswer(inquiry: Props) {
     }
   };
 
-  if (!inquiry.answer_content && !inquiry.answered_at && !canAnswer) {
+  if (!inquiry.answer_content && !canAnswer) {
     return null;
   }
 
@@ -77,19 +112,47 @@ function ProductInquiryAnswer(inquiry: Props) {
       />
 
       <div className="flex flex-col gap-2 sm:gap-3 w-full">
-        <div className="flex items-center gap-1.5 text-[11px] sm:text-xs">
-          <span className="bg-gray-600 text-white font-bold px-1.5 py-0.5 rounded-xs text-[10px] sm:text-[11px]">
-            답변
-          </span>
-          <span className="font-bold text-gray-700">
-            {inquiry.answer_content ? "판매자 답변" : "[판매자 답변 작성]"}
-          </span>
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1 text-[11px] sm:text-xs">
+          <div className="flex items-center gap-2">
+            <span
+              className={`font-bold px-1.5 py-0.5 rounded-xs text-[10px] sm:text-[11px] text-white ${
+                inquiry.answer_content ? "bg-green-600" : "bg-gray-600"
+              }`}
+            >
+              답변
+            </span>
+            <span className="font-bold text-gray-700">
+              {inquiry.answer_content ? "판매자" : "[판매자 답변 작성]"}
+            </span>
+            {inquiry.updated_at && !isEditing && (
+              <span className="text-gray-400 font-medium">(수정됨)</span>
+            )}
+          </div>
+
+          {inquiry.answer_content && (
+            <div className="flex items-center gap-2 text-gray-400">
+              {!isEditing && (
+                <span>
+                  {formatDate(inquiry.updated_at ?? inquiry.answered_at!)}
+                </span>
+              )}
+              {canAnswer && (
+                <button
+                  type="button"
+                  onClick={isEditing ? cancelEdit : startEdit}
+                  className="text-gray-500 hover:text-gray-800 underline underline-offset-2"
+                >
+                  {isEditing ? "취소" : "수정"}
+                </button>
+              )}
+            </div>
+          )}
         </div>
 
-        {inquiry.answer_content ? (
-          <div className="text-xs sm:text-sm text-gray-800 whitespace-pre-line pl-0.5 leading-relaxed">
+        {!showForm ? (
+          <p className="text-gray-700 whitespace-pre-line text-[13px] sm:text-sm leading-relaxed pl-0.5">
             {inquiry.answer_content}
-          </div>
+          </p>
         ) : (
           <div className="w-full flex flex-col sm:gap-0 gap-1 sm:flex-row border-0 sm:border border-gray-200 sm:items-stretch overflow-hidden rounded-xs">
             <div className="relative flex-1 h-[90px] sm:h-[100px] border sm:border-0 border-gray-200 bg-white">
@@ -118,7 +181,7 @@ function ProductInquiryAnswer(inquiry: Props) {
               onClick={handleSendcontent}
               className="w-full sm:w-[90px] h-9 sm:h-auto font-bold text-white text-xs sm:text-sm bg-gray-600 hover:bg-gray-700 duration-200 transition-all flex justify-center items-center shrink-0 disabled:bg-gray-400"
             >
-              등록
+              {isFirstAnswer ? "등록" : "수정 완료"}
             </button>
           </div>
         )}

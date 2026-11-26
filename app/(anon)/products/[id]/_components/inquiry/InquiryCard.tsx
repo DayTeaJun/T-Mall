@@ -1,6 +1,5 @@
 "use client";
 
-import { CornerDownRight } from "lucide-react";
 import InquiryDelBtn from "./InquiryDelBtn";
 import ProductInquiryAnswer from "./ProductInquiryAnswer";
 import { ProductInquiryRow } from "@/lib/queries/products";
@@ -71,40 +70,15 @@ export default function InquiryCard({
         </p>
       </div>
 
-      {inquiry.answer_content ? (
-        <div className="p-3.5 sm:p-4 rounded-sm border-t flex gap-2 items-start mt-1 bg-gray-50/50 border-gray-100">
-          <CornerDownRight
-            size={14}
-            className="text-gray-400 shrink-0 mt-1 sm:w-4 sm:h-4"
-          />
-
-          <div className="flex flex-col gap-2 w-full">
-            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1 text-[11px] sm:text-xs text-gray-400">
-              <div className="flex items-center gap-2">
-                <span className="bg-green-600 text-white font-bold px-1.5 py-0.5 rounded-xs text-[10px] sm:text-[11px]">
-                  답변
-                </span>
-                <span className="font-bold text-gray-700">판매자</span>
-              </div>
-              {inquiry.answered_at && (
-                <span>{formatDate(inquiry.answered_at)}</span>
-              )}
-            </div>
-
-            <p className="text-gray-700 whitespace-pre-line text-[13px] sm:text-sm leading-relaxed pl-0.5">
-              {inquiry.answer_content}
-            </p>
-          </div>
-        </div>
-      ) : (
-        <ProductInquiryAnswer
-          productId={productId}
-          sellerId={sellerId}
-          inquiry_id={inquiry.id}
-          answer_content={inquiry.answer_content}
-          answered_at={inquiry.answered_at}
-        />
-      )}
+      <ProductInquiryAnswer
+        productId={productId}
+        sellerId={sellerId}
+        authorId={inquiry.user_id}
+        inquiry_id={inquiry.id}
+        answer_content={inquiry.answer_content}
+        answered_at={inquiry.answered_at}
+        updated_at={inquiry.updated_at}
+      />
     </div>
   );
 }
