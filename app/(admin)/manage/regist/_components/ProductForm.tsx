@@ -161,26 +161,10 @@ function ProductForm() {
       <ProductFormFields
         basicInfoHeading="기본 정보"
         imageSectionHeading="상품 이미지"
-        name={name}
-        onNameChange={(value) => onChange("name", value)}
-        price={price}
-        onPriceChange={(value) => onChange("price", value)}
-        discountType={discountType}
-        onDiscountTypeChange={(value) => onChange("discountType", value)}
-        discountValue={discountValue}
-        onDiscountValueChange={(value) => onChange("discountValue", value)}
+        fields={fields}
+        onChange={onChange}
         category={category}
         onCategoryClick={handleCategoryClick}
-        subcategory={subcategory}
-        onSubcategoryChange={(value) => onChange("subcategory", value)}
-        gender={gender}
-        onGenderChange={(value) => onChange("gender", value)}
-        color={color}
-        onColorChange={(value) => onChange("color", value)}
-        tags={tags}
-        onTagsChange={(value) => onChange("tags", value)}
-        description={description}
-        onDescriptionChange={(value) => onChange("description", value)}
         selectedSizes={selectedSizes}
         onSizeToggle={handleSizeToggle}
         stockBySize={stockBySize}

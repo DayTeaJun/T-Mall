@@ -1,50 +1,33 @@
 "use client";
 
 import { CATEGORY_MAP, GENDER_OPTIONS } from "@/lib/constants/categories";
+import { Fields, FieldsOnChange } from "@/hooks/useProductFormFields";
 
 interface Props {
   heading: string;
-  name: string;
-  onNameChange: (value: string) => void;
-  price: string;
-  onPriceChange: (value: string) => void;
-  discountType: "" | "percentage" | "fixed";
-  onDiscountTypeChange: (value: "" | "percentage" | "fixed") => void;
-  discountValue: string;
-  onDiscountValueChange: (value: string) => void;
+  fields: Fields;
+  onChange: FieldsOnChange;
   category: string;
   onCategoryClick: (category: string) => void;
-  subcategory: string;
-  onSubcategoryChange: (subcategory: string) => void;
-  gender: string;
-  onGenderChange: (value: string) => void;
-  color: string;
-  onColorChange: (value: string) => void;
-  tags: string;
-  onTagsChange: (value: string) => void;
 }
 
 export default function BasicInfoSection({
   heading,
-  name,
-  onNameChange,
-  price,
-  onPriceChange,
-  discountType,
-  onDiscountTypeChange,
-  discountValue,
-  onDiscountValueChange,
+  fields,
+  onChange,
   category,
   onCategoryClick,
-  subcategory,
-  onSubcategoryChange,
-  gender,
-  onGenderChange,
-  color,
-  onColorChange,
-  tags,
-  onTagsChange,
 }: Props) {
+  const {
+    name,
+    price,
+    discountType,
+    discountValue,
+    subcategory,
+    gender,
+    color,
+    tags,
+  } = fields;
   return (
     <div className="bg-white p-6 border border-gray-200 space-y-4">
       <h3 className="font-semibold text-gray-800 border-b pb-2">{heading}</h3>
@@ -56,7 +39,7 @@ export default function BasicInfoSection({
         </label>
         <input
           value={name}
-          onChange={(e) => onNameChange(e.target.value)}
+          onChange={(e) => onChange("name", e.target.value)}
           className="w-full border border-gray-300 p-2.5 text-sm focus:outline-none"
           placeholder="상품 이름을 입력하세요"
         />
@@ -70,7 +53,7 @@ export default function BasicInfoSection({
         <input
           type="number"
           value={price}
-          onChange={(e) => onPriceChange(e.target.value)}
+          onChange={(e) => onChange("price", e.target.value)}
           className="w-full border border-gray-300 p-2.5 text-sm focus:outline-none"
           placeholder="정가를 입력하세요"
         />
@@ -84,10 +67,11 @@ export default function BasicInfoSection({
           <select
             value={discountType}
             onChange={(e) => {
-              onDiscountTypeChange(
+              onChange(
+                "discountType",
                 e.target.value as "" | "percentage" | "fixed",
               );
-              if (!e.target.value) onDiscountValueChange("");
+              if (!e.target.value) onChange("discountValue", "");
             }}
             className="w-full border border-gray-300 p-2.5 text-sm bg-white focus:outline-none"
           >
@@ -99,7 +83,7 @@ export default function BasicInfoSection({
           <input
             type="number"
             value={discountValue}
-            onChange={(e) => onDiscountValueChange(e.target.value)}
+            onChange={(e) => onChange("discountValue", e.target.value)}
             disabled={!discountType}
             className="w-full border border-gray-300 p-2.5 text-sm focus:outline-none disabled:bg-gray-100"
             placeholder={
@@ -147,7 +131,7 @@ export default function BasicInfoSection({
               <button
                 type="button"
                 key={sub}
-                onClick={() => onSubcategoryChange(sub)}
+                onClick={() => onChange("subcategory", sub)}
                 className={`px-3 py-1.5 text-xs font-medium border transition-colors cursor-pointer ${
                   subcategory === sub
                     ? "bg-black text-white border-black"
@@ -169,7 +153,7 @@ export default function BasicInfoSection({
           </label>
           <select
             value={gender}
-            onChange={(e) => onGenderChange(e.target.value)}
+            onChange={(e) => onChange("gender", e.target.value)}
             className="w-full border border-gray-300 p-2.5 text-sm bg-white focus:outline-none"
           >
             <option value="">선택</option>
@@ -188,7 +172,7 @@ export default function BasicInfoSection({
           </label>
           <input
             value={color}
-            onChange={(e) => onColorChange(e.target.value)}
+            onChange={(e) => onChange("color", e.target.value)}
             className="w-full border border-gray-300 p-2.5 text-sm focus:outline-none"
             placeholder="예: 블랙, 화이트"
           />
@@ -201,7 +185,7 @@ export default function BasicInfoSection({
         </label>
         <input
           value={tags}
-          onChange={(e) => onTagsChange(e.target.value)}
+          onChange={(e) => onChange("tags", e.target.value)}
           className="w-full border border-gray-300 p-2.5 text-sm focus:outline-none"
           placeholder="쉼표(,)로 구분 (예: 여름, 캐주얼, 신상품)"
         />

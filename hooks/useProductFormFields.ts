@@ -21,7 +21,7 @@ interface InitialProduct {
   total_stock: number | null;
 }
 
-interface Fields {
+export interface Fields {
   name: string;
   description: string;
   price: string;
@@ -32,6 +32,11 @@ interface Fields {
   gender: string;
   color: string;
 }
+
+export type FieldsOnChange = <K extends keyof Fields>(
+  field: K,
+  value: Fields[K],
+) => void;
 
 export function useProductFormFields(initialProduct?: InitialProduct) {
   const [fields, setFields] = useState<Fields>({
