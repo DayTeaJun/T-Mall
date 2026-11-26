@@ -28,7 +28,7 @@ async function Header({ user }: { user: UserType | null }) {
                 <SignOutBtn />
 
                 <Link
-                  href={`/mypage`}
+                  href={`/mypage/profile`}
                   className="text-black sm:flex gap-1 items-center hidden"
                 >
                   <p className="text-[12px] sm:text-[14px]">마이페이지</p>

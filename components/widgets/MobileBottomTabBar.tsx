@@ -99,7 +99,7 @@ export default function MobileBottomTabBar() {
           </span>
         </button>
 
-        <Link href="/mypage" className={tabClass(isMyPage)}>
+        <Link href="/mypage/profile" className={tabClass(isMyPage)}>
           <User size={20} />
         </Link>
       </nav>
