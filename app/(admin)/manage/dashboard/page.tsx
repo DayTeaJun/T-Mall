@@ -10,7 +10,7 @@ function page() {
       <h2 className="text-xl font-bold">대시보드</h2>
 
       <div className="w-full min-h-screen bg-gray-50">
-        <section className="w-full flex flex-col sm:grid grid-cols-4 gap-4 p-4">
+        <section className="w-full p-4">
           <SalesStatus />
         </section>
 

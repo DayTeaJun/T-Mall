@@ -531,15 +531,20 @@ export async function getDashboardStatus() {
 
   const { count: lowStockCount } = await lowStockQuery;
 
-  const { count: newUserCount, error: userError } = await supabaseAdmin
-    .from("user_table")
-    .select("*", { count: "exact", head: true })
-    .gte("created_at", oneDayAgo);
+  // 신규 가입자는 사이트 전체 지표라 판매자가 볼 이유가 없는 수치임 — 관리자만 조회.
+  let newUserCount: number | null = null;
+  if (isAdmin) {
+    const { count, error: userError } = await supabaseAdmin
+      .from("user_table")
+      .select("*", { count: "exact", head: true })
+      .gte("created_at", oneDayAgo);
 
-  if (userError) console.error("신규 유저 조회 에러:", userError);
+    if (userError) console.error("신규 유저 조회 에러:", userError);
+    newUserCount = count ?? 0;
+  }
 
   if (!orders)
-    return { totalSales: 0, orderCount: 0, lowStockCount: 0, newUserCount: 0 };
+    return { totalSales: 0, orderCount: 0, lowStockCount: 0, newUserCount };
 
   let totalSales = 0;
   let orderCount = 0;
@@ -564,7 +569,7 @@ export async function getDashboardStatus() {
     totalSales,
     orderCount,
     lowStockCount: lowStockCount || 0,
-    newUserCount: newUserCount || 0,
+    newUserCount,
   };
 }
 
