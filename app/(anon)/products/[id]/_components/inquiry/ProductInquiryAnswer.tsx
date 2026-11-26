@@ -9,6 +9,7 @@ import { queryClient } from "@/components/providers/ReactQueryProvider";
 
 interface Props {
   productId: string;
+  sellerId: string | null;
   inquiry_id: number;
   answer_content: string | null;
   answered_at: string | null;
@@ -17,6 +18,8 @@ interface Props {
 function ProductInquiryAnswer(inquiry: Props) {
   const { user } = useAuthStore();
   const isAdmin = user?.level === 3;
+  const isSeller = !!user?.id && user.id === inquiry.sellerId;
+  const canAnswer = isAdmin || isSeller;
 
   const [content, setContent] = useState("");
 
@@ -29,8 +32,8 @@ function ProductInquiryAnswer(inquiry: Props) {
       toast.error("로그인이 필요합니다.");
       return;
     }
-    if (!isAdmin) {
-      toast.error("관리자만 답변을 작성할 수 있습니다.");
+    if (!canAnswer) {
+      toast.error("판매자 또는 관리자만 답변을 작성할 수 있습니다.");
       return;
     }
 
@@ -62,7 +65,7 @@ function ProductInquiryAnswer(inquiry: Props) {
     }
   };
 
-  if (!inquiry.answer_content && !inquiry.answered_at && !isAdmin) {
+  if (!inquiry.answer_content && !inquiry.answered_at && !canAnswer) {
     return null;
   }
 

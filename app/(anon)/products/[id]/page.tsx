@@ -381,6 +381,7 @@ export default async function ProductDetailPage({
 
       <ProductInquiry
         productId={id}
+        sellerId={product.user_id}
         initialInquiries={initialInquiries}
         initialTotalCount={initialInquiryCount}
       />

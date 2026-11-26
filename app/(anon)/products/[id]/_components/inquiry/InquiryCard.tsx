@@ -19,12 +19,14 @@ export const formatDate = (dateString: string) => {
 interface InquiryCardProps {
   inquiry: ProductInquiryRow;
   productId: string;
+  sellerId: string | null;
   isMyItem?: boolean;
 }
 
 export default function InquiryCard({
   inquiry,
   productId,
+  sellerId,
   isMyItem = false,
 }: InquiryCardProps) {
   return (
@@ -97,6 +99,7 @@ export default function InquiryCard({
       ) : (
         <ProductInquiryAnswer
           productId={productId}
+          sellerId={sellerId}
           inquiry_id={inquiry.id}
           answer_content={inquiry.answer_content}
           answered_at={inquiry.answered_at}

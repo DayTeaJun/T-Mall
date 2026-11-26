@@ -15,17 +15,20 @@ import InquiryPostBtn from "./InquiryPostBtn";
 
 interface Props {
   productId: string;
+  sellerId: string | null;
   initialInquiries?: ProductInquiryRow[];
   initialTotalCount?: number;
 }
 
 function ProductInquiry({
   productId,
+  sellerId,
   initialInquiries,
   initialTotalCount,
 }: Props) {
   const { user } = useAuthStore();
   const userId = user?.id;
+  const isOwner = !!userId && userId === sellerId;
   const [page, setPage] = useState(1);
 
   const { myInquiry, isLoading: isMyInquiryLoading } = useMyProductInquiryQuery(
@@ -61,7 +64,7 @@ function ProductInquiry({
           <h2 className="text-[18px] sm:text-[20px] font-semibold text-gray-800">
             상품 문의
           </h2>
-          {!isMyInquiryLoading && !myInquiry && (
+          {!isMyInquiryLoading && !myInquiry && !isOwner && (
             <InquiryPostBtn productId={productId} />
           )}
         </div>
@@ -98,7 +101,12 @@ function ProductInquiry({
         <div className="w-full flex flex-col">
           {myInquiry && (
             <div className="border-b border-gray-100/60">
-              <InquiryCard inquiry={myInquiry} productId={productId} isMyItem />
+              <InquiryCard
+                inquiry={myInquiry}
+                productId={productId}
+                sellerId={sellerId}
+                isMyItem
+              />
             </div>
           )}
 
@@ -122,7 +130,11 @@ function ProductInquiry({
             <ul className="divide-y divide-gray-100/60">
               {inquiries.map((inquiry) => (
                 <li key={inquiry.id}>
-                  <InquiryCard inquiry={inquiry} productId={productId} />
+                  <InquiryCard
+                    inquiry={inquiry}
+                    productId={productId}
+                    sellerId={sellerId}
+                  />
                 </li>
               ))}
             </ul>
